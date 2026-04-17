@@ -1,38 +1,50 @@
-'use client'
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, } from '@/components/ui/card';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Input } from "@/components/ui/input";
+import {
+    Field,
+    FieldDescription,
+    FieldGroup,
+    FieldLabel,
+    FieldSet,
+} from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { LoginFormValues, loginSchema } from '@/types/auth';
-import { LoginAction } from '@/actions/auth/LoginAction';
 import { useState } from 'react';
-import { userStore } from '@/lib/store/userStore';
+import { signIn } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 
 export default function LoginForm() {
-    const [error, setError] = useState<string | null>(null)
-    const setUser = userStore((state) => state.setUser);
+    const [error, setError] = useState<string | null>(null);
 
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
             email: '',
             password: '',
-        }
+        },
     });
 
     const onSubmit = async (data: LoginFormValues) => {
-        const result = await LoginAction(data);
+        console.log(form.formState.errors);
+        const result = await signIn('credentials', {
+            email: data.email,
+            password: data.password,
+        });
 
-        if (result.error) {
+        if (result?.error) {
             setError(result.error);
-        } else if (result.user) {
-            setUser(result.user);
-
-            redirect('/')
+        } else {
+            redirect('/');
         }
     };
 

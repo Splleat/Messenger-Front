@@ -11,7 +11,7 @@ export async function RegisterAction(data: RegisterFormValues) {
         return { error: '입력값이 올바르지 않습니다.' };
     }
 
-    const response = await fetch('http://localhost:8080/auth/signup', {
+    const response = await fetch('http://localhost:8080/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -23,5 +23,5 @@ export async function RegisterAction(data: RegisterFormValues) {
         return { error: message };
     }
 
-    redirect('/api/auth/login')
+    redirect('/auth/login')
 }

@@ -1,17 +1,19 @@
 import { z } from "zod";
+import { signOut } from 'next-auth/react';
 
 export interface LoginRequest {
     email: string;
     password: string;
 }
 
+export interface LogoutRequest {
+    accessToken: string;
+    refreshToken: string;
+}
+
 export interface LoginResponse {
     accessToken: string;
     refreshToken: string;
-    user: User;
-}
-
-export interface User {
     id: string;
     username: string;
     profileImage: string;
@@ -42,3 +44,10 @@ export const registerSchema = z.object({
 });
 
 export type RegisterFormValues = z.infer<typeof registerSchema>;
+
+export const handleLogout = async () => {
+    await signOut({
+        callbackUrl: '/auth/login',
+        redirect: true
+    })
+}
