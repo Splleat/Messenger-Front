@@ -1,16 +1,12 @@
-'use client'
+'use client';
 
 import { Button } from '@/components/ui/button';
-import { signOut } from 'next-auth/react';
+import { LogoutAction } from '@/actions/auth/LogoutAction';
 
 export default function LogoutButton() {
     const onClick = async () => {
-        await signOut({ callbackUrl: '/auth/login' })
-    }
+        await LogoutAction();
+    };
 
-    return (
-        <Button onClick={onClick}>
-            로그아웃
-        </Button>
-    )
+    return <Button onClick={onClick}>로그아웃</Button>;
 }
