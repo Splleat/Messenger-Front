@@ -3,6 +3,7 @@
 import { auth, signOut } from '@/auth';
 import { LogoutRequest } from '@/types/auth';
 import { ApiErrorResponse } from '@/types/common';
+import { authenticatedFetch } from '@/lib/api-client';
 
 export async function LogoutAction() {
     const session = await auth();
@@ -19,14 +20,14 @@ export async function LogoutAction() {
         refreshToken: session.refreshToken as string
     };
 
-    const response = await fetch("http://localhost:8080/auth/logout", {
+    const response = await authenticatedFetch("http://localhost:8080/auth/logout", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(request),
     });
 
     if (response.ok || response.status == 204) {
-        await signOut()
+        await signOut({redirectTo: '/auth/login'});
         return { success: true };
     }
 
