@@ -15,8 +15,15 @@ export interface LoginResponse {
     refreshToken: string;
     id: string;
     username: string;
-    profileImage: string;
-    statusMessage: string;
+    profileImage?: string;
+    statusMessage?: string;
+    accessTokenExpiresIn: number;
+}
+
+export interface TokenReissueResponse {
+    accessToken: string;
+    refreshToken: string;
+    accessTokenExpiresIn: number;
 }
 
 export const loginSchema = z.object({
