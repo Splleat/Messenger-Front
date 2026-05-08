@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export interface ApiErrorResponse {
     code: string;
     message: string;
@@ -5,33 +7,57 @@ export interface ApiErrorResponse {
 }
 
 export type ActionResponse<T = void> =
-    | (T extends void ?
-        { success: true } : { success: true; data: T })
-    | { success: false; error: ApiErrorResponse }
+    | (T extends void ? { success: true } : { success: true; data: T })
+    | { success: false; error: ApiErrorResponse };
 
 export interface ChannelListResponse {
-    channelId: number;
+    channelId: string;
     channelName: string;
 }
 
 export interface GroupListResponse {
-    groupId: number;
+    groupId: string;
     groupName: string;
 }
 
+export interface GroupCreateRequest {
+    groupName: string;
+    nickname: string;
+}
+
+export interface ChannelCreateRequest {
+    channelName: string;
+    type: ChannelType;
+}
+
+export interface MessageRequest {
+    content: string;
+    idempotencyKey: string;
+    type: string;
+}
+
 export interface MessageResponse {
-    userId: number;
-    channelId: number;
+    id: string;
+    userId: string;
+    channelId: string;
     username: string;
     profileUrl: string;
     content: string;
     type: string;
-    parentMessageId: number;
-    createdAt: Date;
+    parentMessageId: string;
+    createdAt: string;
 }
 
-export const createValidationError = (message: string):
-ActionResponse<never> => ({
+export const groupCreateSchema = z.object({
+    groupName: z.string().min(2, '그룹 이름은 2글자 이상이어야 합니다.'),
+    nickname: z.string().min(2, '닉네임은 2글자 이상이어야 합니다.'),
+});
+
+export type GroupCreateFormValues = z.infer<typeof groupCreateSchema>;
+
+export const createValidationError = (
+    message: string,
+): ActionResponse<never> => ({
     success: false,
     error: {
         code: 'VALIDATION_ERROR',
@@ -40,12 +66,13 @@ ActionResponse<never> => ({
     },
 });
 
-export const createAuthError = (message: string):
-ActionResponse<never> => ({
+export const createAuthError = (message: string): ActionResponse<never> => ({
     success: false,
     error: {
         code: 'UNAUTHENTICATED',
         message,
-        timestamp: new Date()
+        timestamp: new Date(),
     },
 });
+
+type ChannelType = 'TEXT';

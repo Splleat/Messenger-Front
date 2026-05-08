@@ -33,6 +33,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                     return null;
                 }
 
+                console.log('[login expiresIn]', result.data.accessTokenExpiresIn);
+
                 return {
                     id: result.data.id,
                     username: result.data.username,
@@ -40,17 +42,19 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                     refreshToken: result.data.refreshToken,
                     profileImage: result.data.profileImage,
                     statusMessage: result.data.statusMessage,
-                    accessTokenExpiresIn: result.data.accessTokenExpiresIn,
+                    accessTokenExpiresIn: Number(result.data.accessTokenExpiresIn),
                 };
             },
         }),
     ],
     callbacks: {
         async jwt({ token, user }) {
-            const accessTokenExpires =
-                typeof token.accessTokenExpires === 'number'
-                    ? token.accessTokenExpires
-                    : 0;
+            console.log('[JWT]: accessTokenExpires: ', token.accessTokenExpires );
+
+            const accessTokenExpires = token.accessTokenExpires ?
+                Number(token.accessTokenExpires) : 0;
+
+            console.log('[JWT]: accessTokenExpires: ', accessTokenExpires);
 
             if (user) {
                 token.id = user.id;
@@ -64,7 +68,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
             if (
                 accessTokenExpires &&
-                Date.now() < accessTokenExpires
+                Date.now() + 5 * 60 * 1000 < accessTokenExpires
             ) {
                 return token;
             }
@@ -77,6 +81,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                     error: 'RefreshTokenError',
                 };
             }
+
+            console.log('[Token Reissue] Success')
 
             return {
                 ...token,
@@ -91,7 +97,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                 session.user.id = token.id as string;
                 session.user.username = token.username as string;
                 session.accessToken = token.accessToken as string;
-                session.refreshToken = token.refreshToken as string;
                 session.error = token.error as 'RefreshTokenError' | undefined;
             }
 

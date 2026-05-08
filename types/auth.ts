@@ -17,13 +17,13 @@ export interface LoginResponse {
     username: string;
     profileImage?: string;
     statusMessage?: string;
-    accessTokenExpiresIn: number;
+    accessTokenExpiresIn: string;
 }
 
 export interface TokenReissueResponse {
     accessToken: string;
     refreshToken: string;
-    accessTokenExpiresIn: number;
+    accessTokenExpiresIn: string;
 }
 
 export const loginSchema = z.object({

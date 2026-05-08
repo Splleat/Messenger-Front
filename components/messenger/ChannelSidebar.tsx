@@ -4,6 +4,8 @@ import { ChevronDown, Hash, Plus, Settings } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Session } from 'next-auth';
 import { fetchChannelList } from '@/lib/api-messenger';
+import { ChannelCreateForm } from '@/components/messenger/ChannelCreateForm';
+import Link from 'next/link';
 
 export async function ChannelSidebar({ session }: Readonly<{ session: Session }>) {
     const channelList = await fetchChannelList(session);
@@ -24,7 +26,7 @@ export async function ChannelSidebar({ session }: Readonly<{ session: Session }>
                             <span className="text-[11px] font-bold text-muted-foreground group-hover:text-foreground transition-colors uppercase tracking-wider">
                                 텍스트 채널
                             </span>
-                            <Plus className="w-4 h-4 text-muted-foreground cursor-pointer hover:text-foreground transition-colors" />
+                            <ChannelCreateForm />
                         </div>
 
                         <div className="space-y-0.5">
@@ -35,7 +37,9 @@ export async function ChannelSidebar({ session }: Readonly<{ session: Session }>
                                 >
                                     <Hash className="w-4 h-4 text-muted-foreground group-hover:text-accent-foreground" />
                                     <span className="truncate font-medium">
-                                        {channel.channelName}
+                                        <Link href={`/main?channelId=${channel.channelId}`}>
+                                            {channel.channelName}
+                                        </Link>
                                     </span>
                                 </div>
                             ))}

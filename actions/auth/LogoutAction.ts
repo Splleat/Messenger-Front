@@ -8,17 +8,33 @@ import {
     createAuthError,
 } from '@/types/common';
 import { authenticatedFetch } from '@/lib/api-auth';
+import { getToken } from '@auth/core/jwt';
+import { headers } from 'next/dist/server/request/headers';
+import { cookies } from 'next/dist/server/request/cookies';
 
 export async function LogoutAction(): Promise<ActionResponse> {
     const session = await auth();
 
-    if (!session?.accessToken) {
+    const reqHeaders = await headers();
+    const reqCookies = await cookies();
+
+    const req = {
+        headers: reqHeaders,
+        cookies: reqCookies,
+    };
+
+    const jwt = await getToken({
+        req: req,
+        secret: process.env.NEXTAUTH_SECRET,
+    });
+
+    if (!jwt?.accessToken || !jwt?.refreshToken) {
         return createAuthError('인증 정보가 존재하지 않습니다.');
     }
 
     const request: LogoutRequest = {
-        accessToken: session.accessToken,
-        refreshToken: session.refreshToken as string,
+        accessToken: jwt.accessToken as string,
+        refreshToken: jwt.refreshToken as string,
     };
 
     const response = await authenticatedFetch(session, 'http://localhost:8080/auth/logout', {

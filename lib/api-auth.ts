@@ -21,7 +21,7 @@ export class AuthenticationError extends Error {
 }
 
 export async function authenticatedFetch(
-    session: Session,
+    session: Session | null,
     url: string,
     options: RequestInit = {},
 ) {
@@ -29,9 +29,9 @@ export async function authenticatedFetch(
 
     const headers = new Headers(options.headers);
 
-    if (session?.error) {
-        throw new AuthenticationError();
-    }
+    // if (session?.error) {
+    //     throw new AuthenticationError();
+    // }
 
     if (!session?.accessToken) {
         throw new AuthenticationError('인증 정보가 존재하지 않습니다.');
@@ -96,11 +96,17 @@ export async function tokenReissue(
         }),
     });
 
-    const data = await response.json();
+    console.log('[Token Reissue] Called');
 
     if (response.ok) {
-        return { success: true, data: data as TokenReissueResponse };
+        const data: TokenReissueResponse = await response.json();
+
+        console.log('[Token Reissue]: ', data.accessTokenExpiresIn);
+
+        return { success: true, data: data };
     }
 
-    return { success: false, error: data as ApiErrorResponse };
+    const error: ApiErrorResponse = await response.json();
+
+    return { success: false, error: error };
 }
