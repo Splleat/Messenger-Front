@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { signOut } from 'next-auth/react';
 
 export interface LoginRequest {
     email: string;
@@ -16,14 +15,15 @@ export interface LoginResponse {
     refreshToken: string;
     id: string;
     username: string;
-    profileImage: string;
-    statusMessage: string;
+    profileImage?: string;
+    statusMessage?: string;
+    accessTokenExpiresIn: string;
 }
 
-export interface UserSession {
-    username: string;
-    profileImage: string;
-    statusMessage: string;
+export interface TokenReissueResponse {
+    accessToken: string;
+    refreshToken: string;
+    accessTokenExpiresIn: string;
 }
 
 export const loginSchema = z.object({
@@ -44,10 +44,3 @@ export const registerSchema = z.object({
 });
 
 export type RegisterFormValues = z.infer<typeof registerSchema>;
-
-export const handleLogout = async () => {
-    await signOut({
-        callbackUrl: '/auth/login',
-        redirect: true
-    })
-}

@@ -31,8 +31,8 @@ export default function RegisterForm() {
     const onSubmit = async (data: RegisterFormValues) => {
         const result = await RegisterAction(data);
 
-        if (result?.error) {
-            setError(result.error);
+        if (!result.success) {
+            setError(result.error.message);
         }
     };
 

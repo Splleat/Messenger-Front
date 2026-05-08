@@ -1,16 +1,26 @@
-'use client'
+'use client';
 
 import { Button } from '@/components/ui/button';
-import { signOut } from 'next-auth/react';
+import { LogoutAction } from '@/actions/auth/LogoutAction';
+import { useState } from 'react';
 
 export default function LogoutButton() {
+    const [error, setError] = useState<string | null>();
+
     const onClick = async () => {
-        await signOut({ callbackUrl: '/auth/login' })
-    }
+        const result = await LogoutAction();
+
+        if (!result.success) {
+            setError(result.error.message);
+        }
+    };
 
     return (
-        <Button onClick={onClick}>
-            로그아웃
-        </Button>
-    )
+        <div className="flex flex-col gap-2">
+            {error && <p className="text-sm text-red-500">{error}</p>}
+            <Button onClick={onClick} variant="ghost">
+                로그아웃
+            </Button>
+        </div>
+    );
 }

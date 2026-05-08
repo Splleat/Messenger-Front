@@ -35,10 +35,10 @@ export default function LoginForm() {
     });
 
     const onSubmit = async (data: LoginFormValues) => {
-        console.log(form.formState.errors);
         const result = await signIn('credentials', {
             email: data.email,
             password: data.password,
+            redirect: false
         });
 
         if (result?.error) {
