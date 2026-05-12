@@ -37,10 +37,25 @@ export async function fetchGroupList(session: Session) {
     return data;
 }
 
-export async function fetchMessageList(session: Session, channelId: string) {
+export async function fetchDirectChannelMessageList(session: Session, channelId: string) {
     const response = await authenticatedFetch(
         session,
         `http://localhost:8080/channels/${channelId}/messages`,
+    );
+
+    if (!response.ok) {
+        return [];
+    }
+
+    const data: MessageResponse[] = await response.json();
+
+    return data;
+}
+
+export async function fetchGroupChannelMessageList(session: Session, groupId: string, channelId: string) {
+    const response = await authenticatedFetch(
+        session,
+        `http://localhost:8080/groups/${groupId}/channels/${channelId}`,
     );
 
     if (!response.ok) {

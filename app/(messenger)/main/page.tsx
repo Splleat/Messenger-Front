@@ -4,7 +4,12 @@ import { ChannelHeader } from '@/components/messenger/ChannelHeader';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { ChannelChat } from '@/components/messenger/ChannelChat';
-import { fetchChannelList, fetchGroup, fetchGroupList, fetchMessageList } from '@/lib/api-messenger';
+import {
+    fetchChannelList,
+    fetchDirectChannelMessageList,
+    fetchGroup, fetchGroupChannelMessageList,
+    fetchGroupList,
+} from '@/lib/api-messenger';
 
 export default async function MessengerMainPage({
     searchParams,
@@ -33,7 +38,7 @@ export default async function MessengerMainPage({
     if (!selectedChannelId || !selectedChannel) {
         return (
             <div className="flex h-screen w-full overflow-hidden bg-background">
-                <GroupSidebar session={session} groupList={groupList} />
+                <GroupSidebar groupList={groupList} />
                 <ChannelSidebar
                     session={session}
                     channelList={channelList}
@@ -46,11 +51,12 @@ export default async function MessengerMainPage({
         );
     }
 
-    const messages = await fetchMessageList(session, selectedChannelId);
+    const messages = (selectedGroupId) ?
+        await fetchGroupChannelMessageList(session, selectedGroupId, selectedChannelId) : await fetchDirectChannelMessageList(session, selectedChannelId);
 
     return (
         <div className="flex h-screen w-full overflow-hidden bg-background">
-            <GroupSidebar session={session} groupList={groupList} />
+            <GroupSidebar groupList={groupList} />
             <ChannelSidebar
                 session={session}
                 channelList={channelList}
