@@ -5,7 +5,7 @@ import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { ChannelChat } from '@/components/messenger/ChannelChat';
 import {
-    fetchChannelList,
+    fetchChannelList, fetchChannelParticipants,
     fetchDirectChannelMessageList,
     fetchGroup, fetchGroupChannelMessageList,
     fetchGroupList,
@@ -51,6 +51,8 @@ export default async function MessengerMainPage({
         );
     }
 
+    const participants = await fetchChannelParticipants(session, selectedChannelId);
+
     const messages = (selectedGroupId) ?
         await fetchGroupChannelMessageList(session, selectedGroupId, selectedChannelId) : await fetchDirectChannelMessageList(session, selectedChannelId);
 
@@ -64,7 +66,12 @@ export default async function MessengerMainPage({
             />
 
             <main className="flex flex-col flex-1 min-w-0 bg-background">
-                <ChannelHeader channel={selectedChannel} group={selectedGroup} />
+                <ChannelHeader
+                    session={session}
+                    channel={selectedChannel}
+                    group={selectedGroup}
+                    participants={participants}
+                />
                 <ChannelChat
                     channelId={selectedChannelId}
                     accessToken={session.accessToken}

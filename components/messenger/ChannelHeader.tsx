@@ -1,15 +1,39 @@
-import { Bell, Hash, HelpCircle, Inbox, Search, Users } from 'lucide-react';
-import { ChannelListResponse, GroupResponse } from '@/types/common';
+import { Hash } from 'lucide-react';
+import {
+    ChannelListResponse,
+    ChannelParticipantResponse,
+    GroupResponse,
+} from '@/types/common';
 import * as React from 'react';
 import { DirectChannelInviteForm } from '@/components/messenger/DirectChannelInviteForm';
 import { GroupInviteForm } from '@/components/messenger/GroupInviteForm';
+import { ChannelParticipantDialog } from '@/components/messenger/ChannelParticipantDialog';
+import { GroupLeaveButton } from '@/components/messenger/GroupLeaveButton';
+import { ChannelLeaveButton } from '@/components/messenger/ChannelLeaveButton';
+import { Session } from 'next-auth';
 
 export function ChannelHeader({
+    session,
     channel,
+    participants,
     group,
-}: Readonly<{ channel: ChannelListResponse; group?: GroupResponse }>) {
-    const inviteComponent = group ?
-        (<GroupInviteForm groupId={group.groupId} />) : (<DirectChannelInviteForm channelId={channel.channelId} />)
+}: Readonly<{
+    session: Session;
+    channel: ChannelListResponse;
+    participants: ChannelParticipantResponse[];
+    group?: GroupResponse;
+}>) {
+    const inviteComponent = group ? (
+        <GroupInviteForm groupId={group.groupId} />
+    ) : (
+        <DirectChannelInviteForm channelId={channel.channelId} />
+    );
+
+    const leaveComponent = group ? (
+        <GroupLeaveButton session={session} channelId={channel.channelId} />
+    ) : (
+        <ChannelLeaveButton session={session} channelId={channel.channelId} />
+    );
 
     return (
         <header className="h-12 border-b border-border flex items-center px-4 justify-between bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-10">
@@ -23,22 +47,10 @@ export function ChannelHeader({
             <div className="flex items-center gap-4 text-muted-foreground">
                 <div className="hidden md:flex items-center gap-4">
                     {inviteComponent}
-                    <Bell className="w-5 h-5 cursor-pointer hover:text-foreground transition-colors" />
-                    <Users className="w-5 h-5 cursor-pointer hover:text-foreground transition-colors" />
+                    <ChannelParticipantDialog participants={participants} />
                 </div>
 
-                <div className="relative hidden sm:block">
-                    <Search className="w-4 h-4 absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                    <input
-                        className="bg-muted border-none h-7 rounded-md text-xs pl-8 pr-2 w-36 focus:w-48 transition-all focus:ring-1 focus:ring-ring outline-none text-foreground"
-                        placeholder="검색하기"
-                    />
-                </div>
-
-                <div className="flex items-center gap-3">
-                    <Inbox className="w-5 h-5 cursor-pointer hover:text-foreground transition-colors" />
-                    <HelpCircle className="w-5 h-5 cursor-pointer hover:text-foreground transition-colors" />
-                </div>
+                <div className="flex items-center gap-3">{leaveComponent}</div>
             </div>
         </header>
     );

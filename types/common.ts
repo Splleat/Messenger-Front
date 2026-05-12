@@ -39,6 +39,13 @@ export interface ChannelCreateRequest {
     type: ChannelType;
 }
 
+export interface ChannelParticipantResponse {
+    userId: string;
+    username: string;
+    profileImage: string;
+    statusMessage: string;
+}
+
 export interface MessageRequest {
     content: string;
     idempotencyKey: string;

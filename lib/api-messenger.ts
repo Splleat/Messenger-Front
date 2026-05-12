@@ -1,5 +1,6 @@
 import {
     ChannelListResponse,
+    ChannelParticipantResponse,
     GroupListResponse,
     GroupResponse,
     MessageResponse,
@@ -33,6 +34,21 @@ export async function fetchGroupList(session: Session) {
     }
 
     const data: GroupListResponse[] = await response.json();
+
+    return data;
+}
+
+export async function fetchChannelParticipants(session: Session, channelId: string) {
+    const response = await authenticatedFetch(
+        session,
+        `http://localhost:8080/channels/${channelId}/participants`,
+    );
+
+    if (!response.ok) {
+        return [];
+    }
+
+    const data: ChannelParticipantResponse[] = await response.json();
 
     return data;
 }
