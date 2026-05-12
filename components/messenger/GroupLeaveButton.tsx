@@ -8,12 +8,12 @@ import { GroupLeaveAction } from '@/actions/messenger/GroupLeaveAction';
 
 export function GroupLeaveButton({
     session,
-    channelId,
-}: Readonly<{ session: Session; channelId: string }>) {
+    groupId,
+}: Readonly<{ session: Session; groupId: string }>) {
     const router = useRouter();
 
     const onClick = async () => {
-        const result = await GroupLeaveAction(session, channelId);
+        const result = await GroupLeaveAction(session, groupId);
 
         if (result.success) {
             router.push('/main');

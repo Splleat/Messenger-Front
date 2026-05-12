@@ -30,7 +30,7 @@ export function ChannelHeader({
     );
 
     const leaveComponent = group ? (
-        <GroupLeaveButton session={session} channelId={channel.channelId} />
+        <GroupLeaveButton session={session} groupId={group.groupId} />
     ) : (
         <ChannelLeaveButton session={session} channelId={channel.channelId} />
     );
