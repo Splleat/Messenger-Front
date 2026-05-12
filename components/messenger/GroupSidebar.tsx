@@ -15,10 +15,6 @@ export async function GroupSidebar({
 
                 <Separator className="w-8 h-0.5 bg-border rounded-full mb-2" />
 
-                <div className="flex flex-col items-center gap-3 px-2">
-                    <GroupCreateForm />
-                </div>
-
                 <ScrollArea className="flex-1 w-full">
                     <div className="flex flex-col items-center gap-3 px-2">
                         {groupList.map((group) => (
@@ -28,6 +24,7 @@ export async function GroupSidebar({
                                 name={group.groupName}
                             />
                         ))}
+                        <GroupCreateForm />
                     </div>
                 </ScrollArea>
             </TooltipProvider>
