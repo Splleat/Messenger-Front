@@ -1,5 +1,9 @@
-'use client';
+'use client'
 
+import { useForm } from 'react-hook-form';
+import { GroupInviteAction } from '@/actions/messenger/GroupInviteAction';
+import { useState } from 'react';
+import { useRouter } from 'next/dist/client/components/navigation';
 import {
     Dialog,
     DialogClose,
@@ -9,32 +13,33 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 import { Field, FieldGroup } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { useForm } from 'react-hook-form';
-import { GroupCreateAction } from '@/actions/messenger/GroupCreateAction';
-import { GroupCreateFormValues, groupCreateSchema } from '@/types/common';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import * as React from 'react';
 
-export function GroupCreateForm() {
+interface FormValues {
+    targetId: string;
+}
+
+export function GroupInviteForm({ groupId }: Readonly<{ groupId: string }>) {
     const [open, setOpen] = useState(false);
     const router = useRouter();
 
-    const form = useForm<GroupCreateFormValues>({
-        resolver: zodResolver(groupCreateSchema),
+    const form = useForm<FormValues>({
         defaultValues: {
-            groupName: '',
+            targetId: '',
         },
     });
 
-    const onSubmit = async (data: GroupCreateFormValues) => {
-        const result = await GroupCreateAction({
-            groupName: data.groupName,
-        });
+    const onSubmit = async (data: FormValues) => {
+        const request = {
+            targetIds: [data.targetId],
+        };
+
+        const result = await GroupInviteAction(groupId, request);
 
         if (result.success) {
             router.refresh();
@@ -45,19 +50,19 @@ export function GroupCreateForm() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline">+</Button>
+                <Plus className="w-4 h-4 text-muted-foreground cursor-pointer hover:text-foreground transition-colors" />
             </DialogTrigger>
             <DialogContent className="sm:max-w-sm">
                 <DialogHeader>
-                    <DialogTitle>그룹 생성</DialogTitle>
+                    <DialogTitle>그룹 초대</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
                     <FieldGroup>
                         <Field>
-                            <Label htmlFor="groupName">그룹명</Label>
+                            <Label htmlFor="groupName">사용자 아이디</Label>
                             <Input
-                                id="groupName"
-                                {...form.register('groupName')}
+                                id="target-id"
+                                {...form.register('targetId')}
                             />
                         </Field>
                     </FieldGroup>
@@ -65,7 +70,7 @@ export function GroupCreateForm() {
                         <DialogClose asChild>
                             <Button variant="outline">취소</Button>
                         </DialogClose>
-                        <Button type="submit">생성하기</Button>
+                        <Button type="submit">초대하기</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
