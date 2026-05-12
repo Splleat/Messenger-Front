@@ -1,7 +1,7 @@
 'use client'
 
 import { useForm } from 'react-hook-form';
-import { ChannelCreateAction } from '@/actions/messenger/ChannelCreateAction';
+import { DirectChannelCreateActon } from '@/actions/messenger/DirectChannelCreateActon';
 import { redirect } from 'next/navigation';
 import {
     Dialog,
@@ -29,16 +29,16 @@ export function ChannelCreateForm() {
         defaultValues: {
             channelName: '',
             type: 'TEXT',
-        }
-    })
+        },
+    });
 
     const onSubmit = async (data: FormValues) => {
-        const result = await ChannelCreateAction(data);
-        
+        const result = await DirectChannelCreateActon(data);
+
         if (result.success) {
             redirect('/main');
         }
-    }
+    };
 
     return (
         <Dialog>

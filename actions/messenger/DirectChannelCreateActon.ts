@@ -8,7 +8,7 @@ import {
 import { authenticatedFetch } from '@/lib/api-auth';
 import { auth } from '@/auth';
 
-export async function ChannelCreateAction(
+export async function DirectChannelCreateActon(
     request: ChannelCreateRequest,
 ): Promise<ActionResponse> {
     const session = await auth();

@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ChevronDown, Hash, Plus, Settings } from 'lucide-react';
+import { ChevronDown, Hash, Settings } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Session } from 'next-auth';
-import { fetchChannelList } from '@/lib/api-messenger';
 import { ChannelCreateForm } from '@/components/messenger/ChannelCreateForm';
 import Link from 'next/link';
+import { ChannelListResponse } from '@/types/common';
 
-export async function ChannelSidebar({ session }: Readonly<{ session: Session }>) {
-    const channelList = await fetchChannelList(session);
-
+export async function ChannelSidebar({
+    session,
+    channelList,
+}: Readonly<{ session: Session; channelList: ChannelListResponse[] }>) {
     return (
         <aside className="w-60 h-full flex flex-col bg-secondary/30 border-r border-border shrink-0">
             <header className="h-12 border-b border-border flex items-center px-4 justify-between hover:bg-accent/50 cursor-pointer transition-colors shadow-sm">
@@ -37,7 +38,9 @@ export async function ChannelSidebar({ session }: Readonly<{ session: Session }>
                                 >
                                     <Hash className="w-4 h-4 text-muted-foreground group-hover:text-accent-foreground" />
                                     <span className="truncate font-medium">
-                                        <Link href={`/main?channelId=${channel.channelId}`}>
+                                        <Link
+                                            href={`/main?channelId=${channel.channelId}`}
+                                        >
                                             {channel.channelName}
                                         </Link>
                                     </span>

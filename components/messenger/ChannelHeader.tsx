@@ -1,17 +1,23 @@
-import { Hash, Bell, Users, Search, Inbox, HelpCircle } from "lucide-react";
+import { Bell, Hash, HelpCircle, Inbox, Search, Users } from 'lucide-react';
+import { ChannelListResponse } from '@/types/common';
+import * as React from 'react';
+import { DirectChannelInviteForm } from '@/components/messenger/DirectChannelInviteForm';
 
-export function ChannelHeader({ name }: Readonly<{ name: string }>) {
+export function ChannelHeader({
+    channel,
+}: Readonly<{ channel: ChannelListResponse }>) {
     return (
         <header className="h-12 border-b border-border flex items-center px-4 justify-between bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-10">
             <div className="flex items-center gap-2 overflow-hidden">
                 <Hash className="w-5 h-5 text-muted-foreground flex-shrink-0" />
                 <span className="font-bold text-sm text-foreground truncate">
-                    {name}
+                    {channel.channelName}
                 </span>
             </div>
 
             <div className="flex items-center gap-4 text-muted-foreground">
                 <div className="hidden md:flex items-center gap-4">
+                    <DirectChannelInviteForm channelId={channel.channelId} />
                     <Bell className="w-5 h-5 cursor-pointer hover:text-foreground transition-colors" />
                     <Users className="w-5 h-5 cursor-pointer hover:text-foreground transition-colors" />
                 </div>

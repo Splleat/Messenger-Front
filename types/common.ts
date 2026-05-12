@@ -48,6 +48,10 @@ export interface MessageResponse {
     createdAt: string;
 }
 
+export interface DirectChannelInviteRequest {
+    targetIds: string[]
+}
+
 export const groupCreateSchema = z.object({
     groupName: z.string().min(2, '그룹 이름은 2글자 이상이어야 합니다.'),
     nickname: z.string().min(2, '닉네임은 2글자 이상이어야 합니다.'),
