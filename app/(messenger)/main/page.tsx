@@ -4,12 +4,12 @@ import { ChannelHeader } from '@/components/messenger/ChannelHeader';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { ChannelChat } from '@/components/messenger/ChannelChat';
-import { fetchChannelList, fetchMessageList } from '@/lib/api-messenger';
+import { fetchChannelList, fetchGroup, fetchGroupList, fetchMessageList } from '@/lib/api-messenger';
 
 export default async function MessengerMainPage({
     searchParams,
 }: Readonly<{
-    searchParams: Promise<{ channelId?: string }>;
+    searchParams: Promise<{ channelId?: string, groupId?: string }>;
 }>) {
     const session = await auth();
 
@@ -18,8 +18,13 @@ export default async function MessengerMainPage({
     }
 
     const params = await searchParams;
+    const selectedGroupId = params.groupId;
     const selectedChannelId = params.channelId;
-    const channelList = await fetchChannelList(session);
+    const groupList = await fetchGroupList(session);
+    const selectedGroup = (selectedGroupId) ?
+        await fetchGroup(session, selectedGroupId) : undefined;
+    const channelList = (selectedGroup) ?
+        selectedGroup.channelList : await fetchChannelList(session);
     const selectedChannel = channelList.find(
         (channel) => channel.channelId === selectedChannelId,
     );
@@ -28,8 +33,12 @@ export default async function MessengerMainPage({
     if (!selectedChannelId || !selectedChannel) {
         return (
             <div className="flex h-screen w-full overflow-hidden bg-background">
-                <GroupSidebar session={session} />
-                <ChannelSidebar session={session} channelList={channelList} />
+                <GroupSidebar session={session} groupList={groupList} />
+                <ChannelSidebar
+                    session={session}
+                    channelList={channelList}
+                    group={selectedGroup}
+                />
                 <main className="flex flex-col flex-1 min-w-0 bg-background items-center justify-center text-muted-foreground">
                     채널을 선택해주세요.
                 </main>
@@ -41,11 +50,15 @@ export default async function MessengerMainPage({
 
     return (
         <div className="flex h-screen w-full overflow-hidden bg-background">
-            <GroupSidebar session={session} />
-            <ChannelSidebar session={session} channelList={channelList} />
+            <GroupSidebar session={session} groupList={groupList} />
+            <ChannelSidebar
+                session={session}
+                channelList={channelList}
+                group={selectedGroup}
+            />
 
             <main className="flex flex-col flex-1 min-w-0 bg-background">
-                <ChannelHeader channel={selectedChannel} />
+                <ChannelHeader channel={selectedChannel} group={selectedGroup} />
                 <ChannelChat
                     channelId={selectedChannelId}
                     accessToken={session.accessToken}

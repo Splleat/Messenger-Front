@@ -5,17 +5,20 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Session } from 'next-auth';
 import { ChannelCreateForm } from '@/components/messenger/ChannelCreateForm';
 import Link from 'next/link';
-import { ChannelListResponse } from '@/types/common';
+import { ChannelListResponse, GroupResponse } from '@/types/common';
 
 export async function ChannelSidebar({
     session,
+    group,
     channelList,
-}: Readonly<{ session: Session; channelList: ChannelListResponse[] }>) {
+}: Readonly<{ session: Session; group?: GroupResponse; channelList: ChannelListResponse[] }>) {
+    const title = group ? group.groupName : '개인 채널';
+
     return (
         <aside className="w-60 h-full flex flex-col bg-secondary/30 border-r border-border shrink-0">
             <header className="h-12 border-b border-border flex items-center px-4 justify-between hover:bg-accent/50 cursor-pointer transition-colors shadow-sm">
                 <span className="font-bold text-sm text-foreground truncate">
-                    Project Workspace
+                    {title}
                 </span>
                 <ChevronDown className="w-4 h-4 text-muted-foreground" />
             </header>
@@ -27,7 +30,7 @@ export async function ChannelSidebar({
                             <span className="text-[11px] font-bold text-muted-foreground group-hover:text-foreground transition-colors uppercase tracking-wider">
                                 텍스트 채널
                             </span>
-                            <ChannelCreateForm />
+                            <ChannelCreateForm groupId={group?.groupId} />
                         </div>
 
                         <div className="space-y-0.5">
@@ -39,7 +42,7 @@ export async function ChannelSidebar({
                                     <Hash className="w-4 h-4 text-muted-foreground group-hover:text-accent-foreground" />
                                     <span className="truncate font-medium">
                                         <Link
-                                            href={`/main?channelId=${channel.channelId}`}
+                                            href={group ? `/main?groupId=${group.groupId}&channelId=${channel.channelId}` : `/main?channelId=${channel.channelId}`}
                                         >
                                             {channel.channelName}
                                         </Link>

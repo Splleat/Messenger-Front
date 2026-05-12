@@ -1,7 +1,9 @@
 'use client'
 
 import { useForm } from 'react-hook-form';
-import { DirectChannelInviteAction } from '@/actions/messenger/DirectChannelInviteAction';
+import { GroupInviteAction } from '@/actions/messenger/GroupInviteAction';
+import { useState } from 'react';
+import { useRouter } from 'next/dist/client/components/navigation';
 import {
     Dialog,
     DialogClose,
@@ -17,16 +19,12 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
 interface FormValues {
     targetId: string;
 }
 
-export function DirectChannelInviteForm({
-    channelId,
-}: Readonly<{ channelId: string }>) {
+export function GroupInviteForm({ groupId }: Readonly<{ groupId: string }>) {
     const [open, setOpen] = useState(false);
     const router = useRouter();
 
@@ -37,12 +35,11 @@ export function DirectChannelInviteForm({
     });
 
     const onSubmit = async (data: FormValues) => {
-        const targetIds = [data.targetId];
         const request = {
-            targetIds: targetIds,
+            targetIds: [data.targetId],
         };
 
-        const result = await DirectChannelInviteAction(channelId, request);
+        const result = await GroupInviteAction(groupId, request);
 
         if (result.success) {
             router.refresh();
@@ -57,7 +54,7 @@ export function DirectChannelInviteForm({
             </DialogTrigger>
             <DialogContent className="sm:max-w-sm">
                 <DialogHeader>
-                    <DialogTitle>채널 초대</DialogTitle>
+                    <DialogTitle>그룹 초대</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
                     <FieldGroup>

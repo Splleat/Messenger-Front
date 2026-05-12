@@ -8,20 +8,21 @@ import {
 import { authenticatedFetch } from '@/lib/api-auth';
 import { auth } from '@/auth';
 
-export async function DirectChannelCreateActon(
+export async function ChannelCreateAction(
     request: ChannelCreateRequest,
+    groupId?: string,
 ): Promise<ActionResponse> {
     const session = await auth();
 
-    const response = await authenticatedFetch(
-        session,
-        'http://localhost:8080/channels',
-        {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(request),
-        },
-    );
+    const url = groupId
+        ? `http://localhost:8080/groups/${groupId}/channels`
+        : 'http://localhost:8080/channels';
+
+    const response = await authenticatedFetch(session, url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(request),
+    });
 
     if (!response.ok) {
         const error: ApiErrorResponse = await response.json();

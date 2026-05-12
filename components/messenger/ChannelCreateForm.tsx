@@ -1,8 +1,7 @@
-'use client'
+'use client';
 
 import { useForm } from 'react-hook-form';
-import { DirectChannelCreateActon } from '@/actions/messenger/DirectChannelCreateActon';
-import { redirect } from 'next/navigation';
+import { ChannelCreateAction } from '@/actions/messenger/ChannelCreateAction';
 import {
     Dialog,
     DialogClose,
@@ -18,13 +17,19 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Plus } from 'lucide-react';
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 interface FormValues {
-    channelName: string,
-    type: 'TEXT' | never,
+    channelName: string;
+    type: 'TEXT' | never;
 }
 
-export function ChannelCreateForm() {
+export function ChannelCreateForm({ groupId }: Readonly<{ groupId?: string }>) {
+    const [open, setOpen] = useState(false);
+
+    const router = useRouter();
+
     const form = useForm<FormValues>({
         defaultValues: {
             channelName: '',
@@ -33,15 +38,16 @@ export function ChannelCreateForm() {
     });
 
     const onSubmit = async (data: FormValues) => {
-        const result = await DirectChannelCreateActon(data);
+        const result = await ChannelCreateAction(data, groupId);
 
         if (result.success) {
-            redirect('/main');
+            router.refresh();
+            setOpen(false);
         }
     };
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Plus className="w-4 h-4 text-muted-foreground cursor-pointer hover:text-foreground transition-colors" />
             </DialogTrigger>

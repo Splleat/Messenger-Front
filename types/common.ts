@@ -25,6 +25,16 @@ export interface GroupCreateRequest {
     nickname: string;
 }
 
+export interface GroupInviteRequest {
+    targetIds: string[];
+}
+
+export interface GroupResponse {
+    groupId: string;
+    groupName: string;
+    channelList: ChannelListResponse[];
+}
+
 export interface ChannelCreateRequest {
     channelName: string;
     type: ChannelType;

@@ -1,6 +1,10 @@
 'use server'
 
-import { ActionResponse, DirectChannelInviteRequest } from '@/types/common';
+import {
+    ActionResponse,
+    ApiErrorResponse,
+    DirectChannelInviteRequest,
+} from '@/types/common';
 import { authenticatedFetch } from '@/lib/api-auth';
 import { auth } from '@/auth';
 
@@ -17,7 +21,7 @@ export async function DirectChannelInviteAction(channelId: string, request: Dire
     )
 
     if (!response.ok) {
-        const error = await response.json();
+        const error: ApiErrorResponse = await response.json();
 
         return { success: false, error: error };
     }
