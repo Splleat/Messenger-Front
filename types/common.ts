@@ -22,7 +22,6 @@ export interface GroupListResponse {
 
 export interface GroupCreateRequest {
     groupName: string;
-    nickname: string;
 }
 
 export interface GroupInviteRequest {
@@ -64,7 +63,6 @@ export interface DirectChannelInviteRequest {
 
 export const groupCreateSchema = z.object({
     groupName: z.string().min(2, '그룹 이름은 2글자 이상이어야 합니다.'),
-    nickname: z.string().min(2, '닉네임은 2글자 이상이어야 합니다.'),
 });
 
 export type GroupCreateFormValues = z.infer<typeof groupCreateSchema>;

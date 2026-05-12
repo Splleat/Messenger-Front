@@ -28,14 +28,12 @@ export function GroupCreateForm() {
         resolver: zodResolver(groupCreateSchema),
         defaultValues: {
             groupName: '',
-            nickname: '',
         },
     });
 
     const onSubmit = async (data: GroupCreateFormValues) => {
         const result = await GroupCreateAction({
             groupName: data.groupName,
-            nickname: data.nickname,
         });
 
         if (result.success) {
@@ -60,13 +58,6 @@ export function GroupCreateForm() {
                             <Input
                                 id="groupName"
                                 {...form.register('groupName')}
-                            />
-                        </Field>
-                        <Field>
-                            <Label htmlFor="nickname">닉네임</Label>
-                            <Input
-                                id="nickname"
-                                {...form.register('nickname')}
                             />
                         </Field>
                     </FieldGroup>
