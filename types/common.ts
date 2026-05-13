@@ -67,21 +67,21 @@ export interface MessageResponse {
 export interface MessageCursorPrevResponse {
     messages: MessageResponse[];
     hasPrev: boolean;
-    prevCursorId: string;
+    prevCursorId: string | null;
 }
 
 export interface MessageCursorNextResponse {
     messages: MessageResponse[];
     hasNext: boolean;
-    nextCursorId: string;
+    nextCursorId: string | null;
 }
 
 export interface MessageCursorBothResponse {
     messages: MessageResponse[];
     hasPrev: boolean;
     hasNext: boolean;
-    prevCursorId: string;
-    nextCursorId: string;
+    prevCursorId: string | null;
+    nextCursorId: string | null;
 }
 
 export interface DirectChannelInviteRequest {

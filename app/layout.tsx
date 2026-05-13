@@ -4,6 +4,7 @@ import '@/app/globals.css';
 import React from 'react';
 import { ThemeProvider } from '@/components/theme-provider';
 import NextAuthProvider from '@/components/auth/NextAuthProvider';
+import { QueryProvider } from '@/components/query-provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,6 +19,7 @@ export default function RootLayout({
     return (
         <html lang="ko" suppressHydrationWarning>
             <body className={inter.className}>
+            <QueryProvider>
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="system"
@@ -26,6 +28,7 @@ export default function RootLayout({
                 >
                     <NextAuthProvider>{children}</NextAuthProvider>
                 </ThemeProvider>
+            </QueryProvider>
             </body>
         </html>
     );

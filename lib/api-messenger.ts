@@ -3,6 +3,9 @@ import {
     ChannelParticipantResponse,
     GroupListResponse,
     GroupResponse,
+    MessageCursorBothResponse,
+    MessageCursorNextResponse,
+    MessageCursorPrevResponse,
     MessageResponse,
 } from '@/types/common';
 import { Session } from 'next-auth';
@@ -68,7 +71,7 @@ export async function fetchDirectChannelMessageList(session: Session, channelId:
     return data;
 }
 
-export async function fetchGroupChannelMessageList(session: Session, groupId: string, channelId: string) {
+export async function fetchGroupChannelEnterMessageList(session: Session, groupId: string, channelId: string) {
     const response = await authenticatedFetch(
         session,
         `http://localhost:8080/groups/${groupId}/channels/${channelId}`,
@@ -78,7 +81,52 @@ export async function fetchGroupChannelMessageList(session: Session, groupId: st
         return [];
     }
 
-    const data: MessageResponse[] = await response.json();
+    const data: MessageCursorBothResponse = await response.json();
+
+    return data;
+}
+
+export async function fetchDirectChannelEnterMessageList(session: Session, channelId: string) {
+    const response = await authenticatedFetch(
+        session,
+        `http://localhost:8080/channels/${channelId}`
+    );
+
+    if (!response.ok) {
+        return [];
+    }
+
+    const data: MessageCursorBothResponse = await response.json();
+
+    return data
+}
+
+export async function fetchCursorPrevMessage(session: Session, channelId: string, cursorId: string) {
+    const response = await authenticatedFetch(
+        session,
+        `http://localhost:8080/channels/${channelId}/prev?cursorId=${cursorId}`,
+    );
+
+    if (!response.ok) {
+        return [];
+    }
+
+    const data: MessageCursorPrevResponse = await response.json();
+
+    return data;
+}
+
+export async function fetchCursorNextMessage(session: Session, channelId: string, cursorId: string) {
+    const response = await authenticatedFetch(
+        session,
+        `http://localhost:8080/channels/${channelId}/next?cursorId=${cursorId}`,
+    );
+
+    if (!response.ok) {
+        return [];
+    }
+
+    const data: MessageCursorNextResponse = await response.json();
 
     return data;
 }
