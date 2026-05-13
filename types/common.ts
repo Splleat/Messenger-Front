@@ -64,6 +64,26 @@ export interface MessageResponse {
     createdAt: string;
 }
 
+export interface MessageCursorPrevResponse {
+    messages: MessageResponse[];
+    hasPrev: boolean;
+    prevCursorId: string;
+}
+
+export interface MessageCursorNextResponse {
+    messages: MessageResponse[];
+    hasNext: boolean;
+    nextCursorId: string;
+}
+
+export interface MessageCursorBothResponse {
+    messages: MessageResponse[];
+    hasPrev: boolean;
+    hasNext: boolean;
+    prevCursorId: string;
+    nextCursorId: string;
+}
+
 export interface DirectChannelInviteRequest {
     targetIds: string[]
 }
