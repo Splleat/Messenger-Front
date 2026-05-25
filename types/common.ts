@@ -64,25 +64,33 @@ export interface MessageResponse {
     createdAt: string;
 }
 
-export interface MessageCursorPrevResponse {
-    messages: MessageResponse[];
-    hasPrev: boolean;
-    prevCursorId: string | null;
-}
-
-export interface MessageCursorNextResponse {
-    messages: MessageResponse[];
-    hasNext: boolean;
-    nextCursorId: string | null;
-}
-
-export interface MessageCursorBothResponse {
+export interface ChannelEnterResponse {
     messages: MessageResponse[];
     hasPrev: boolean;
     hasNext: boolean;
-    prevCursorId: string | null;
-    nextCursorId: string | null;
+    prevCursorId?: string;
+    nextCursorId?: string;
+    lastReadMessageId?: string;
 }
+
+export interface MessagePageResponse {
+    messages: MessageResponse[];
+    hasMore: boolean;
+    cursorId?: string;
+}
+
+export interface ChannelMessagePage {
+    messages: MessageResponse[];
+    hasPrev: boolean;
+    hasNext: boolean;
+    prevCursorId?: string;
+    nextCursorId?: string;
+}
+
+export type MessagePageParam =
+    | { direction: 'initial'; cursor: string | null }
+    | { direction: 'up'; cursor: string }
+    | { direction: 'down'; cursor: string }
 
 export interface DirectChannelInviteRequest {
     targetIds: string[]

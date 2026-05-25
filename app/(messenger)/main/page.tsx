@@ -5,9 +5,10 @@ import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { ChannelChat } from '@/components/messenger/ChannelChat';
 import {
-    fetchChannelList, fetchChannelParticipants,
-    fetchDirectChannelMessageList,
-    fetchGroup, fetchGroupChannelMessageList,
+    fetchChannelEnterMessages,
+    fetchChannelList,
+    fetchChannelParticipants,
+    fetchGroup,
     fetchGroupList,
 } from '@/lib/api-messenger';
 
@@ -53,8 +54,9 @@ export default async function MessengerMainPage({
 
     const participants = await fetchChannelParticipants(session, selectedChannelId);
 
-    const messages = (selectedGroupId) ?
-        await fetchGroupChannelMessageList(session, selectedGroupId, selectedChannelId) : await fetchDirectChannelMessageList(session, selectedChannelId);
+    const messages = await fetchChannelEnterMessages(session, selectedChannelId, selectedGroupId);
+
+    console.log(messages);
 
     return (
         <div className="flex h-screen w-full overflow-hidden bg-background">
@@ -73,6 +75,7 @@ export default async function MessengerMainPage({
                     participants={participants}
                 />
                 <ChannelChat
+                    session={session}
                     channelId={selectedChannelId}
                     accessToken={session.accessToken}
                     messageHistory={messages}
