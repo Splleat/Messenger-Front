@@ -1,11 +1,11 @@
 import {
     ChannelListResponse,
+    ChannelMessagePage,
     ChannelParticipantResponse,
     GroupListResponse,
     GroupResponse,
-    MessageCursorBothResponse,
-    MessageCursorNextResponse,
-    MessageCursorPrevResponse,
+    MessagePageParam,
+    MessagePageResponse,
     MessageResponse,
 } from '@/types/common';
 import { Session } from 'next-auth';
@@ -71,64 +71,90 @@ export async function fetchDirectChannelMessageList(session: Session, channelId:
     return data;
 }
 
-export async function fetchGroupChannelEnterMessageList(session: Session, groupId: string, channelId: string) {
-    const response = await authenticatedFetch(
-        session,
-        `http://localhost:8080/groups/${groupId}/channels/${channelId}`,
-    );
+export async function fetchMessages(session: Session, param: MessagePageParam, channelId: string): Promise<ChannelMessagePage> {
+    switch (param.direction) {
+        case 'up': {
+            const data = await fetchCursorPrevMessage(
+                session,
+                channelId,
+                param.cursor,
+            );
 
-    if (!response.ok) {
-        return [];
+            return {
+                messages: data.messages,
+                hasPrev: data.hasMore,
+                prevCursorId: data.cursorId,
+                hasNext: false,
+                nextCursorId: undefined,
+            };
+        }
+
+        case 'down': {
+            const data = await fetchCursorNextMessage(
+                session,
+                channelId,
+                param.cursor,
+            );
+
+            return {
+                messages: data.messages,
+                hasNext: data.hasMore,
+                nextCursorId: data.cursorId,
+                hasPrev: false,
+                prevCursorId: undefined,
+            }
+        }
+        default:
+            throw new Error('처리되지 않은 케이스');
     }
-
-    const data: MessageCursorBothResponse = await response.json();
-
-    return data;
 }
 
-export async function fetchDirectChannelEnterMessageList(session: Session, channelId: string) {
+export async function fetchCursorPrevMessage(
+    session: Session,
+    channelId: string,
+    cursorId: string,
+): Promise<MessagePageResponse> {
     const response = await authenticatedFetch(
         session,
-        `http://localhost:8080/channels/${channelId}`
+        `http://localhost:8080/channels/${channelId}/messages?cursorId=${cursorId}&direction=prev`,
     );
 
     if (!response.ok) {
-        return [];
+        // TODO: fallback
     }
 
-    const data: MessageCursorBothResponse = await response.json();
-
-    return data
+    return await response.json();
 }
 
-export async function fetchCursorPrevMessage(session: Session, channelId: string, cursorId: string) {
+export async function fetchCursorNextMessage(session: Session, channelId: string, cursorId: string): Promise<MessagePageResponse> {
     const response = await authenticatedFetch(
         session,
-        `http://localhost:8080/channels/${channelId}/prev?cursorId=${cursorId}`,
+        `http://localhost:8080/channels/${channelId}/messages?cursorId=${cursorId}&direction=next`,
     );
 
     if (!response.ok) {
-        return [];
+        // TODO: fallback
     }
 
-    const data: MessageCursorPrevResponse = await response.json();
-
-    return data;
+    return await response.json();
 }
 
-export async function fetchCursorNextMessage(session: Session, channelId: string, cursorId: string) {
+// 채널 입장
+export async function fetchChannelEnterMessages(session: Session, channelId: string, groupId?: string): Promise<ChannelMessagePage> {
+    const url = groupId ?
+        `http://localhost:8080/groups/${groupId}/channels/${channelId}` :
+        `http://localhost:8080/channels/${channelId}`;
+
     const response = await authenticatedFetch(
         session,
-        `http://localhost:8080/channels/${channelId}/next?cursorId=${cursorId}`,
+        url
     );
 
     if (!response.ok) {
-        return [];
+        // TODO: fallback
     }
 
-    const data: MessageCursorNextResponse = await response.json();
-
-    return data;
+    return await response.json();
 }
 
 export async function fetchGroup(session: Session, groupId: string) {
