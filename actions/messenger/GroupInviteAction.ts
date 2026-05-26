@@ -1,22 +1,35 @@
-'use server'
+'use server';
 
 import {
-    ActionResponse,
     ApiErrorResponse,
+    FormState,
     GroupInviteRequest,
 } from '@/types/common';
 import { authenticatedFetch } from '@/lib/api-auth';
 import { auth } from '@/auth';
+import { validateFormData } from '@/lib/form-validator';
+import { inviteSchema } from '@/schema/messenger';
 
 export async function GroupInviteAction(
+    data: FormData,
     groupId: string,
-    request : GroupInviteRequest
-): Promise<ActionResponse> {
+): Promise<FormState> {
     const session = await auth();
+
+    const validation = validateFormData(inviteSchema, data);
+
+    if (!validation.success) {
+        return validation.state;
+    }
+
+    const request: GroupInviteRequest = {
+        targetIds: [validation.data.targetId],
+    };
 
     const response = await authenticatedFetch(
         session,
-        `http://localhost:8080/groups/${groupId}`, {
+        `http://localhost:8080/groups/${groupId}`,
+        {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(request),
@@ -25,9 +38,9 @@ export async function GroupInviteAction(
 
     if (!response.ok) {
         const error: ApiErrorResponse = await response.json();
-        
-        return { success: false, error: error };
+
+        return { error: error.message };
     }
 
-    return { success: true };
+    return { error: null };
 }

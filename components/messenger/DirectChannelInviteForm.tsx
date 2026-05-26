@@ -1,54 +1,52 @@
-'use client'
+'use client';
 
-import { useForm } from 'react-hook-form';
 import { DirectChannelInviteAction } from '@/actions/messenger/DirectChannelInviteAction';
 import {
     Dialog,
     DialogClose,
     DialogContent,
+    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Plus } from 'lucide-react';
-import { Field, FieldGroup } from '@/components/ui/field';
+import { Field, FieldError, FieldGroup } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import * as React from 'react';
+import { useActionState, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-
-interface FormValues {
-    targetId: string;
-}
+import { FormState } from '@/types/common';
+import { validateFormData } from '@/lib/form-validator';
+import { inviteSchema } from '@/schema/messenger';
 
 export function DirectChannelInviteForm({
     channelId,
 }: Readonly<{ channelId: string }>) {
     const [open, setOpen] = useState(false);
     const router = useRouter();
+    const [state, action, isPending] = useActionState(
+        async (_prev: FormState, data: FormData) => {
+            const parsed = validateFormData(inviteSchema, data);
 
-    const form = useForm<FormValues>({
-        defaultValues: {
-            targetId: '',
+            if (!parsed.success) {
+                return parsed.state;
+            }
+
+            const response = await DirectChannelInviteAction(data, channelId);
+
+            if (!response.error) {
+                setOpen(false);
+                router.refresh();
+            }
+
+            return response;
         },
-    });
-
-    const onSubmit = async (data: FormValues) => {
-        const targetIds = [data.targetId];
-        const request = {
-            targetIds: targetIds,
-        };
-
-        const result = await DirectChannelInviteAction(channelId, request);
-
-        if (result.success) {
-            router.refresh();
-            setOpen(false);
-        }
-    };
+        { error: null },
+    );
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -59,21 +57,26 @@ export function DirectChannelInviteForm({
                 <DialogHeader>
                     <DialogTitle>채널 초대</DialogTitle>
                 </DialogHeader>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
+                <DialogDescription>
+                    초대할 사용자의 아이디를 입력해주세요.
+                </DialogDescription>
+                <form action={action}>
                     <FieldGroup>
+                        {state.error ? (
+                            <FieldError errors={[{ message: state.error }]} />
+                        ) : null}
                         <Field>
                             <Label htmlFor="groupName">사용자 아이디</Label>
-                            <Input
-                                id="target-id"
-                                {...form.register('targetId')}
-                            />
+                            <Input id="target-id" name="target-id" required />
                         </Field>
                     </FieldGroup>
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button variant="outline">취소</Button>
                         </DialogClose>
-                        <Button type="submit">초대하기</Button>
+                        <Button type="submit" disabled={isPending}>
+                            {isPending ? '초대 중...' : '초대하기'}
+                        </Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

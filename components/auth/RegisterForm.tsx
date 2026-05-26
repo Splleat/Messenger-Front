@@ -1,6 +1,5 @@
 'use client';
 
-import { registerSchema } from '@/types/auth';
 import { useActionState } from 'react';
 import { RegisterAction } from '@/actions/auth/RegisterAction';
 import {
@@ -21,15 +20,16 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { FormState } from '@/types/common';
+import { registerSchema } from '@/schema/auth';
+import { validateFormData } from '@/lib/form-validator';
 
 export default function RegisterForm() {
     const [state, action, isPending] = useActionState(
         async (_prev: FormState, data: FormData) => {
-            const formData = Object.fromEntries(data.entries());
-            const parsed = registerSchema.safeParse(formData);
+            const parsed = validateFormData(registerSchema, data);
 
             if (!parsed.success) {
-                return { error: parsed.error.issues[0].message };
+                return parsed.state;
             }
 
             return await RegisterAction(data);

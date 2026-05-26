@@ -1,22 +1,35 @@
-'use server'
+'use server';
 
 import {
-    ActionResponse,
     ApiErrorResponse,
     ChannelCreateRequest,
+    FormState,
 } from '@/types/common';
 import { authenticatedFetch } from '@/lib/api-auth';
 import { auth } from '@/auth';
+import { validateFormData } from '@/lib/form-validator';
+import { channelCreateSchema } from '@/schema/messenger';
 
 export async function ChannelCreateAction(
-    request: ChannelCreateRequest,
+    data: FormData,
     groupId?: string,
-): Promise<ActionResponse> {
+): Promise<FormState> {
     const session = await auth();
+
+    const validation = validateFormData(channelCreateSchema, data);
+
+    if (!validation.success) {
+        return validation.state;
+    }
 
     const url = groupId
         ? `http://localhost:8080/groups/${groupId}/channels`
         : 'http://localhost:8080/channels';
+
+    const request: ChannelCreateRequest = {
+        channelName: validation.data.channelName,
+        type: "TEXT"
+    }
 
     const response = await authenticatedFetch(session, url, {
         method: 'POST',
@@ -27,8 +40,8 @@ export async function ChannelCreateAction(
     if (!response.ok) {
         const error: ApiErrorResponse = await response.json();
 
-        return { success: false, error: error };
+        return { error: error.message };
     }
 
-    return { success: true };
+    return { error: null };
 }

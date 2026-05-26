@@ -1,7 +1,6 @@
 import {
     LoginRequest,
     LoginResponse,
-    loginSchema,
     TokenReissueResponse,
 } from '@/types/auth';
 import {
@@ -12,6 +11,7 @@ import {
 } from '@/types/common';
 import { JWT } from '@auth/core/jwt';
 import { Session } from 'next-auth';
+import { loginSchema } from '@/schema/auth';
 
 export class AuthenticationError extends Error {
     constructor(message = '인증이 만료되었습니다. 다시 로그인해주세요.') {

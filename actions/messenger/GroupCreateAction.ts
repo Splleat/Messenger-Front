@@ -1,17 +1,25 @@
-'use server'
+'use server';
 
 import { auth } from '@/auth';
 import {
-    ActionResponse,
     ApiErrorResponse,
+    FormState,
     GroupCreateRequest,
 } from '@/types/common';
 import { authenticatedFetch } from '@/lib/api-auth';
+import { validateFormData } from '@/lib/form-validator';
+import { groupCreateSchema } from '@/schema/messenger';
 
-export async function GroupCreateAction(
-    request: GroupCreateRequest,
-): Promise<ActionResponse> {
+export async function GroupCreateAction(data: FormData): Promise<FormState> {
     const session = await auth();
+
+    const validation = validateFormData(groupCreateSchema, data);
+
+    if (!validation.success) {
+        return validation.state;
+    }
+
+    const request: GroupCreateRequest = validation.data;
 
     const response = await authenticatedFetch(
         session,
@@ -26,8 +34,8 @@ export async function GroupCreateAction(
     if (!response.ok) {
         const error: ApiErrorResponse = await response.json();
 
-        return { success: false, error: error };
+        return { error: error.message };
     }
 
-    return { success: true };
+    return { error: null };
 }

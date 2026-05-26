@@ -1,50 +1,50 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
 import { ChannelCreateAction } from '@/actions/messenger/ChannelCreateAction';
 import {
     Dialog,
     DialogClose,
     DialogContent,
+    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Field, FieldGroup } from '@/components/ui/field';
+import { Field, FieldError, FieldGroup } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Plus } from 'lucide-react';
 import * as React from 'react';
+import { useActionState, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-
-interface FormValues {
-    channelName: string;
-    type: 'TEXT' | never;
-}
+import { FormState } from '@/types/common';
+import { validateFormData } from '@/lib/form-validator';
+import { channelCreateSchema } from '@/schema/messenger';
 
 export function ChannelCreateForm({ groupId }: Readonly<{ groupId?: string }>) {
     const [open, setOpen] = useState(false);
-
     const router = useRouter();
+    const [state, action, isPending] = useActionState(
+        async (_prev: FormState, data: FormData) => {
+            const parsed = validateFormData(channelCreateSchema, data);
 
-    const form = useForm<FormValues>({
-        defaultValues: {
-            channelName: '',
-            type: 'TEXT',
+            if (!parsed.success) {
+                return parsed.state;
+            }
+
+            const response = await ChannelCreateAction(data, groupId);
+
+            if (!response.error) {
+                setOpen(false);
+                router.refresh();
+            }
+
+            return response;
         },
-    });
-
-    const onSubmit = async (data: FormValues) => {
-        const result = await ChannelCreateAction(data, groupId);
-
-        if (result.success) {
-            router.refresh();
-            setOpen(false);
-        }
-    };
+        { error: null },
+    );
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -55,13 +55,18 @@ export function ChannelCreateForm({ groupId }: Readonly<{ groupId?: string }>) {
                 <DialogHeader>
                     <DialogTitle>채널 생성</DialogTitle>
                 </DialogHeader>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
+                <DialogDescription>채널 이름을 입력해주세요.</DialogDescription>
+                <form action={action}>
                     <FieldGroup>
+                        {state.error ? (
+                            <FieldError errors={[{ message: state.error }]} />
+                        ) : null}
                         <Field>
-                            <Label htmlFor="groupName">채널명</Label>
+                            <Label htmlFor="channelName">채널명</Label>
                             <Input
-                                id="groupName"
-                                {...form.register('channelName')}
+                                id="channelName"
+                                name="channelName"
+                                required
                             />
                         </Field>
                     </FieldGroup>
@@ -69,7 +74,9 @@ export function ChannelCreateForm({ groupId }: Readonly<{ groupId?: string }>) {
                         <DialogClose asChild>
                             <Button variant="outline">취소</Button>
                         </DialogClose>
-                        <Button type="submit">생성하기</Button>
+                        <Button type="submit" disabled={isPending}>
+                            {isPending ? '생성 중...' : '생성하기'}
+                        </Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

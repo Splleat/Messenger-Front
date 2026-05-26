@@ -1,27 +1,23 @@
 'use server';
 
-import { loginSchema } from '@/types/auth';
 import { signIn } from '@/auth';
 import { FormState } from '@/types/common';
 import { AuthError } from 'next-auth';
 import { redirect } from 'next/navigation';
+import { loginSchema } from '@/schema/auth';
+import { validateFormData } from '@/lib/form-validator';
 
-export async function LoginAction(
-    data: FormData,
-): Promise<FormState> {
-    const parsed = loginSchema.safeParse({
-        email: data.get('email'),
-        password: data.get('password'),
-    });
+export async function LoginAction(data: FormData): Promise<FormState> {
+    const validation = validateFormData(loginSchema, data);
 
-    if (!parsed.success) {
-        return { error: parsed.error.issues[0].message };
+    if (!validation.success) {
+        return validation.state;
     }
 
     try {
         await signIn('credentials', {
-            email: parsed.data.email,
-            password: parsed.data.password,
+            email: validation.data.email,
+            password: validation.data.password,
             redirect: false,
         });
     } catch (error) {
