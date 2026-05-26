@@ -19,9 +19,20 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useActionState } from 'react';
 import { LoginAction } from '@/actions/auth/LoginAction';
+import { loginSchema } from '@/types/auth';
+import { FormState } from '@/types/common';
 
 export default function LoginForm() {
-    const [state, action, isPending] = useActionState(LoginAction, { error: null });
+    const [state, action, isPending] = useActionState(async (_prev: FormState, data: FormData) => {
+        const formData = Object.fromEntries(data.entries());
+        const parsed = loginSchema.safeParse(formData);
+
+        if (!parsed.success) {
+            return { error: parsed.error.issues[0].message };
+        }
+
+        return await LoginAction(data);
+    }, { error: null });
 
     return (
         <Card className="w-full max-w-sm">

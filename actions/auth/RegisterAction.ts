@@ -1,32 +1,33 @@
 'use server';
 
-import { RegisterFormValues, registerSchema } from '@/types/auth';
-import {
-    ActionResponse,
-    ApiErrorResponse,
-    createValidationError,
-} from '@/types/common';
+import { registerSchema } from '@/types/auth';
+import { ApiErrorResponse, FormState } from '@/types/common';
+import { redirect } from 'next/navigation';
 
 export async function RegisterAction(
-    data: RegisterFormValues,
-): Promise<ActionResponse> {
-    const parsed = registerSchema.safeParse(data);
+    data: FormData,
+): Promise<FormState> {
+    const parsed = registerSchema.safeParse({
+        email: data.get('email'),
+        name: data.get('name'),
+        password: data.get('password'),
+    });
 
     if (!parsed.success) {
-        return createValidationError('입력값이 올바르지 않습니다.');
+        return { error: parsed.error.issues[0].message };
     }
 
     const response = await fetch('http://localhost:8080/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(parsed.data),
     });
 
     if (!response.ok) {
         const error: ApiErrorResponse = await response.json();
 
-        return { success: false, error: error };
+        return { error: error.message };
     }
 
-    return { success: true };
+    redirect('/auth/login');
 }

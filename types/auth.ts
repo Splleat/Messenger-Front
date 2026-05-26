@@ -31,8 +31,6 @@ export const loginSchema = z.object({
     password: z.string().min(8, '비밀번호는 8자 이상이어야 합니다.'),
 });
 
-export type LoginFormValues = z.infer<typeof loginSchema>;
-
 export const registerSchema = z.object({
     email: z.email('올바른 이메일을 입력하세요'),
     name: z.string()
@@ -42,5 +40,3 @@ export const registerSchema = z.object({
         .min(8, '비밀번호는 8자 이성이어야 합니다.')
         .max(72, '비밀번호는 72자 이하여야 합니다.')
 });
-
-export type RegisterFormValues = z.infer<typeof registerSchema>;

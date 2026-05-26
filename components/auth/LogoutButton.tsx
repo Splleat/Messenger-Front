@@ -2,25 +2,21 @@
 
 import { Button } from '@/components/ui/button';
 import { LogoutAction } from '@/actions/auth/LogoutAction';
-import { useState } from 'react';
+import { useActionState } from 'react';
 
 export default function LogoutButton() {
-    const [error, setError] = useState<string | null>();
-
-    const onClick = async () => {
-        const result = await LogoutAction();
-
-        if (!result.success) {
-            setError(result.error.message);
-        }
-    };
+    const [state, action, isPending] = useActionState(async () => {
+        return await LogoutAction();
+    }, null);
 
     return (
         <div className="flex flex-col gap-2">
-            {error && <p className="text-sm text-red-500">{error}</p>}
-            <Button onClick={onClick} variant="ghost">
-                로그아웃
-            </Button>
+            <form action={action} className="flex flex-col gap-2">
+                {state?.error ? <p className="text-red-500">{state.error}</p> : null}
+                <Button type="submit" variant="ghost" disabled={isPending}>
+                    {isPending ? '로그아웃 중...' : '로그아웃'}
+                </Button>
+            </form>
         </div>
     );
 }

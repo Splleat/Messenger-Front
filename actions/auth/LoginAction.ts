@@ -7,7 +7,6 @@ import { AuthError } from 'next-auth';
 import { redirect } from 'next/navigation';
 
 export async function LoginAction(
-    _prev: FormState,
     data: FormData,
 ): Promise<FormState> {
     const parsed = loginSchema.safeParse({
