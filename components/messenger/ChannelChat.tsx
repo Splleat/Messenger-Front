@@ -97,6 +97,12 @@ export function ChannelChat({
         },
     });
 
+    const hasNextPageRef = useRef<boolean>(hasNextPage);
+
+    useEffect(() => {
+        hasNextPageRef.current = hasNextPage;
+    }, [hasNextPage]);
+
     useEffect(() => {
         const client = new Client({
             webSocketFactory: () =>
@@ -114,25 +120,27 @@ export function ChannelChat({
 
                         console.log(payload);
 
-                        queryClient.setQueryData<
-                            InfiniteData<ChannelMessagePage>
-                        >(queryKey, (oldData) => {
-                            if (!oldData) return oldData;
+                        if (!hasNextPageRef.current) {
+                            queryClient.setQueryData<
+                                InfiniteData<ChannelMessagePage>
+                            >(queryKey, (oldData) => {
+                                if (!oldData) return oldData;
 
-                            const updatedPages = [...oldData.pages];
-                            const lastPageIndex = updatedPages.length - 1;
-                            const lastPage = updatedPages[lastPageIndex];
+                                const updatedPages = [...oldData.pages];
+                                const lastPageIndex = updatedPages.length - 1;
+                                const lastPage = updatedPages[lastPageIndex];
 
-                            updatedPages[lastPageIndex] = {
-                                ...lastPage,
-                                messages: [...lastPage.messages, payload],
-                            };
+                                updatedPages[lastPageIndex] = {
+                                    ...lastPage,
+                                    messages: [...lastPage.messages, payload],
+                                };
 
-                            return {
-                                ...oldData,
-                                pages: updatedPages,
-                            };
-                        });
+                                return {
+                                    ...oldData,
+                                    pages: updatedPages,
+                                };
+                            });
+                        }
                     },
                 );
             },
@@ -172,7 +180,11 @@ export function ChannelChat({
     return (
         <main className="flex h-full min-h-0 flex-col overflow-hidden bg-background">
             <MessageList
-                messages={data?.pages?.flatMap((page) => page.messages).filter(Boolean) ?? []}
+                messages={
+                    data?.pages
+                        ?.flatMap((page) => page.messages)
+                        .filter(Boolean) ?? []
+                }
                 onLoadPrevious={() => fetchPreviousPage()}
                 onLoadNext={() => fetchNextPage()}
                 hasPrevious={hasPreviousPage}

@@ -3,7 +3,7 @@
 import { MessageResponse } from '@/types/common';
 import { MessageItem } from '@/components/messenger/MessageItem';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 interface MessageListProps {
     messages: MessageResponse[];
@@ -26,19 +26,55 @@ export function MessageList({
     isLoadingNext,
     anchorMessageId,
 }: Readonly<MessageListProps>) {
+    const START_INDEX = 10000;
+    const [firstItemIndex, setFirstItemIndex] = useState(START_INDEX);
     const virtuosoRef = useRef<VirtuosoHandle>(null);
-    const [initialTopIndex] = useState<number>(() => {
-        return anchorMessageId ?
-            messages.findIndex((m) => m.id === anchorMessageId) :
-            Math.max(0, messages.length - 1);
-    });
+    const initialTopIndex = useMemo(() => {
+        if (anchorMessageId) {
+            const lastReadMessageIdx = messages.findIndex(
+                (m) => m.id === anchorMessageId,
+            );
+
+            return lastReadMessageIdx === -1
+                ? firstItemIndex + messages.length - 1
+                : firstItemIndex + lastReadMessageIdx;
+        }
+
+        return firstItemIndex + messages.length - 1;
+    }, [anchorMessageId, firstItemIndex, messages]);
+
+    const prevFirstIdRef = useRef<string | undefined>(messages[0]?.id);
+    const prevLengthRef = useRef<number>(messages.length);
+
+    useLayoutEffect(() => {
+        const prevFirstId = prevFirstIdRef.current;
+        const currentFirstId = messages[0]?.id;
+        const prevLength = prevLengthRef.current;
+
+        if (messages.length > prevLength && prevFirstId !== currentFirstId) {
+            const addedCount = messages.length - prevLength;
+
+            if (addedCount > 0) {
+                setFirstItemIndex((prev) => prev - addedCount);
+            }
+        }
+
+        prevFirstIdRef.current = messages[0]?.id;
+        prevLengthRef.current = messages.length;
+    }, [messages]);
 
     return (
         <Virtuoso
             ref={virtuosoRef}
+            style={{ height: '100%', width: '100%' }}
             data={messages}
-            initialTopMostItemIndex={initialTopIndex}
-            firstItemIndex={initialTopIndex}
+            firstItemIndex={firstItemIndex}
+            followOutput={(isAtBottom) => {
+                if (hasNext) return false;
+
+                return isAtBottom ? 'auto' : false;
+            }}
+            initialTopMostItemIndex={{ index: initialTopIndex, align: 'end' }}
             startReached={() => {
                 if (hasPrevious && !isLoadingPrevious) onLoadPrevious();
             }}
@@ -46,20 +82,6 @@ export function MessageList({
                 if (hasNext && !isLoadingNext) onLoadNext();
             }}
             itemContent={(_, msg) => <MessageItem key={msg.id} {...msg} />}
-            components={{
-                Header: () =>
-                    isLoadingPrevious ? (
-                        <div className="py-2 text-center text-sm">
-                            불러오는 중...
-                        </div>
-                    ) : null,
-                Footer: () =>
-                    isLoadingNext ? (
-                        <div className="py-2 text-center text-sm">
-                            불러오는 중...
-                        </div>
-                    ) : null,
-            }}
         />
     );
 }
