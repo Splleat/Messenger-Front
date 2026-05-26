@@ -19,6 +19,7 @@ import {
 } from '@tanstack/react-query';
 import { fetchMessages } from '@/lib/api-messenger';
 import { Session } from 'next-auth';
+import { Card, CardContent } from '@/components/ui/card';
 
 export function ChannelChat({
     session,
@@ -178,30 +179,32 @@ export function ChannelChat({
     }
 
     return (
-        <main className="flex h-full min-h-0 flex-col overflow-hidden bg-background">
-            <MessageList
-                messages={
-                    data?.pages
-                        ?.flatMap((page) => page.messages)
-                        .filter(Boolean) ?? []
-                }
-                onLoadPrevious={() => fetchPreviousPage()}
-                onLoadNext={() => fetchNextPage()}
-                hasPrevious={hasPreviousPage}
-                hasNext={hasNextPage}
-                isLoadingPrevious={isFetchingPreviousPage}
-                isLoadingNext={isFetchingNextPage}
-                anchorMessageId={lastReadMessageId}
-            />
+        <Card className="flex h-full min-h-0 flex-col overflow-hidden border-none shadow-none bg-background">
+            <CardContent className="flex-1 min-h-0 p-0">
+                <MessageList
+                    messages={
+                        data?.pages
+                            ?.flatMap((page) => page.messages)
+                            .filter(Boolean) ?? []
+                    }
+                    onLoadPrevious={() => fetchPreviousPage()}
+                    onLoadNext={() => fetchNextPage()}
+                    hasPrevious={hasPreviousPage}
+                    hasNext={hasNextPage}
+                    isLoadingPrevious={isFetchingPreviousPage}
+                    isLoadingNext={isFetchingNextPage}
+                    anchorMessageId={lastReadMessageId}
+                />
+            </CardContent>
 
-            <div className="shrink-0 px-4 pb-6 bg-background">
+            <CardContent className="shrink-0 px-4 pb-6 bg-background block">
                 <ChannelChatInput
                     placeHolder="메시지 전송"
                     value={content}
                     onChange={setContent}
                     onSubmit={sendMessage}
                 />
-            </div>
-        </main>
+            </CardContent>
+        </Card>
     );
 }

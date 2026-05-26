@@ -11,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
     Field,
     FieldDescription,
+    FieldError,
     FieldGroup,
     FieldLabel,
     FieldSet,
@@ -58,7 +59,7 @@ export default function LoginForm() {
                 <FieldSet className="w-full max-w-xs">
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <FieldGroup>
-                            <Field>
+                            <Field data-invalid={!!form.formState.errors.email}>
                                 <FieldLabel htmlFor="email">이메일</FieldLabel>
                                 <Input
                                     id="email"
@@ -84,12 +85,10 @@ export default function LoginForm() {
                                     비밀번호를 입력해주세요.
                                 </FieldDescription>
                             </Field>
+                            <FieldError
+                                errors={[form.formState.errors.email]}
+                            />
                             <Field>
-                                {error && (
-                                    <p className="text-sm text-red-500">
-                                        {error}
-                                    </p>
-                                )}
                                 <Button type="submit">로그인</Button>
                             </Field>
                         </FieldGroup>

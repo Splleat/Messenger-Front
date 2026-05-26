@@ -15,14 +15,14 @@ export function MessageItem({
             </Avatar>
             <div className="flex flex-col min-w-0">
                 <div className="flex items-center gap-2">
-                    <span className="font-bold text-sm text-foreground hover:underline cursor-pointer">
+                    <span className="text-sm font-semibold tracking-tight">
                         {username}
                     </span>
-                    <span className="text-[10px] text-muted-foreground font-medium">
+                    <span className="text-xs text-muted-foreground">
                         {createdAt.toLocaleString()}
                     </span>
                 </div>
-                <p className="text-sm text-foreground/90 leading-relaxed wrap-break-word whitespace-pre-wrap">
+                <p className="text-sm leading-7 text-foreground/90">
                     {content}
                 </p>
             </div>
