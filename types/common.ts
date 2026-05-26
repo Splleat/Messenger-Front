@@ -6,6 +6,10 @@ export interface ApiErrorResponse {
     timestamp: Date;
 }
 
+export type FormState = {
+    error: string | null
+}
+
 export type ActionResponse<T = void> =
     | (T extends void ? { success: true } : { success: true; data: T })
     | { success: false; error: ApiErrorResponse };
