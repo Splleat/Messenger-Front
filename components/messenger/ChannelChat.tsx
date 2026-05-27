@@ -17,7 +17,7 @@ import {
     useInfiniteQuery,
     useQueryClient,
 } from '@tanstack/react-query';
-import { fetchMessages } from '@/lib/api-messenger';
+import { fetchMessages, updateChannelLastRead } from '@/lib/api-messenger';
 import { Session } from 'next-auth';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -138,7 +138,11 @@ export function ChannelChat({
                             message.body,
                         ) as MessageResponse;
 
-                        console.log(payload);
+                        const currentUserId = session.user.id;
+
+                        if (currentUserId && payload.userId !== currentUserId) {
+                            updateChannelLastRead(session, channelId, payload.id);
+                        }
 
                         if (!hasNextPageRef.current) {
                             queryClient.setQueryData<

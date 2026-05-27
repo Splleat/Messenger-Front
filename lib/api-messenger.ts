@@ -171,3 +171,15 @@ export async function fetchGroup(session: Session, groupId: string) {
 
     return data;
 }
+
+export async function updateChannelLastRead(
+    session: Session,
+    channelId: string,
+    lastReadMessageId: string
+) {
+    await authenticatedFetch(
+        session,
+        `http://localhost:8080/channels/${channelId}/read`,
+        { method: 'PATCH', body: JSON.stringify({ lastReadMessageId }) }
+    );
+}
