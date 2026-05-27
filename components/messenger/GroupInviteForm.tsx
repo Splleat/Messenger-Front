@@ -65,7 +65,7 @@ export function GroupInviteForm({ groupId }: Readonly<{ groupId: string }>) {
                         ) : null}
                         <Field>
                             <Label htmlFor="groupName">사용자 아이디</Label>
-                            <Input id="target-id" name="target-id" required />
+                            <Input id="targetId" name="targetId" required />
                         </Field>
                     </FieldGroup>
                     <DialogFooter>

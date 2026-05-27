@@ -51,7 +51,7 @@ export function MessageList({
         const currentFirstId = messages[0]?.id;
         const prevLength = prevLengthRef.current;
 
-        if (messages.length > prevLength && prevFirstId !== currentFirstId) {
+        if (prevLength > 0 && messages.length > prevLength && prevFirstId !== currentFirstId) {
             const addedCount = messages.length - prevLength;
 
             if (addedCount > 0) {
