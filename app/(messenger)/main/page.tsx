@@ -20,22 +20,26 @@ export default async function MessengerMainPage({
 }>) {
     const session = await auth();
 
-    if (!session?.accessToken) {
+    if (!session?.accessToken || session.error === 'RefreshTokenError') {
         redirect('/auth/login');
     }
 
     const params = await searchParams;
     const selectedGroupId = params.groupId;
     const selectedChannelId = params.channelId;
-    const groupList = await fetchGroupList(session);
-    const selectedGroup = (selectedGroupId) ?
-        await fetchGroup(session, selectedGroupId) : undefined;
-    const channelList = (selectedGroup) ?
-        selectedGroup.channelList : await fetchChannelList(session);
+
+    const [groupList, selectedGroup] = await Promise.all([
+        fetchGroupList(session),
+        selectedGroupId ? fetchGroup(session, selectedGroupId) : Promise.resolve(undefined)
+    ]);
+
+    const channelList = selectedGroup
+        ? selectedGroup.channelList
+        : await fetchChannelList(session);
+
     const selectedChannel = channelList.find(
         (channel) => channel.channelId === selectedChannelId,
     );
-
 
     if (!selectedChannelId || !selectedChannel) {
         return (
@@ -55,11 +59,10 @@ export default async function MessengerMainPage({
         );
     }
 
-    const participants = await fetchChannelParticipants(session, selectedChannelId);
-
-    const messages = await fetchChannelEnterMessages(session, selectedChannelId, selectedGroupId);
-
-    console.log(messages);
+    const [participants, messages] = await Promise.all([
+        fetchChannelParticipants(session, selectedChannelId),
+        fetchChannelEnterMessages(session, selectedChannelId, selectedGroupId),
+    ])
 
     return (
         <SidebarProvider>
