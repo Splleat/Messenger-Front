@@ -30,7 +30,7 @@ export function ChannelHeader({
     );
 
     return (
-        <header className="h-12 border-b border-border flex items-center px-4 justify-between bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-10">
+        <header className="h-12 border-b border-border flex items-center px-4 justify-between bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 sticky top-0 z-10">
             <div className="flex items-center gap-2 overflow-hidden">
                 <Hash className="w-5 h-5 text-muted-foreground shrink-0" />
                 <span className="font-bold text-sm text-foreground truncate">

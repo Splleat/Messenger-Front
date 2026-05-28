@@ -4,6 +4,7 @@ import { ChannelHeader } from '@/components/messenger/ChannelHeader';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { ChannelChat } from '@/components/messenger/ChannelChat';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import {
     fetchChannelEnterMessages,
     fetchChannelList,
@@ -38,17 +39,19 @@ export default async function MessengerMainPage({
 
     if (!selectedChannelId || !selectedChannel) {
         return (
-            <div className="flex h-screen w-full overflow-hidden bg-background">
-                <GroupSidebar groupList={groupList} />
-                <ChannelSidebar
-                    session={session}
-                    channelList={channelList}
-                    group={selectedGroup}
-                />
-                <main className="flex flex-col flex-1 min-w-0 bg-background items-center justify-center text-muted-foreground">
-                    채널을 선택해주세요.
-                </main>
-            </div>
+            <SidebarProvider>
+                <div className="flex h-screen w-full overflow-hidden bg-background">
+                    <GroupSidebar groupList={groupList} />
+                    <ChannelSidebar
+                        session={session}
+                        channelList={channelList}
+                        group={selectedGroup}
+                    />
+                    <main className="flex flex-col flex-1 min-w-0 bg-background items-center justify-center text-muted-foreground">
+                        채널을 선택해주세요.
+                    </main>
+                </div>
+            </SidebarProvider>
         );
     }
 
@@ -59,28 +62,30 @@ export default async function MessengerMainPage({
     console.log(messages);
 
     return (
-        <div className="flex h-screen w-full overflow-hidden bg-background">
-            <GroupSidebar groupList={groupList} />
-            <ChannelSidebar
-                session={session}
-                channelList={channelList}
-                group={selectedGroup}
-            />
-
-            <main className="flex flex-col flex-1 min-w-0 bg-background">
-                <ChannelHeader
+        <SidebarProvider>
+            <div className="flex h-screen w-full overflow-hidden bg-background">
+                <GroupSidebar groupList={groupList} />
+                <ChannelSidebar
                     session={session}
-                    channel={selectedChannel}
+                    channelList={channelList}
                     group={selectedGroup}
-                    participants={participants}
                 />
-                <ChannelChat
-                    session={session}
-                    channelId={selectedChannelId}
-                    accessToken={session.accessToken}
-                    messageHistory={messages}
-                />
-            </main>
-        </div>
+
+                <main className="flex flex-col flex-1 min-w-0 bg-background">
+                    <ChannelHeader
+                        session={session}
+                        channel={selectedChannel}
+                        group={selectedGroup}
+                        participants={participants}
+                    />
+                    <ChannelChat
+                        session={session}
+                        channelId={selectedChannelId}
+                        accessToken={session.accessToken}
+                        messageHistory={messages}
+                    />
+                </main>
+            </div>
+        </SidebarProvider>
     );
 }

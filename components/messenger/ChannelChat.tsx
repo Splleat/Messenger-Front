@@ -232,7 +232,7 @@ export function ChannelChat({
                 />
             </CardContent>
 
-            <CardContent className="shrink-0 px-4 pb-6 bg-background block">
+            <CardContent className="p-4 bg-background">
                 <ChannelChatInput
                     placeHolder="메시지 전송"
                     value={content}
