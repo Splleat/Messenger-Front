@@ -15,6 +15,7 @@ export type ActionResponse<T = void> =
 export interface ChannelListResponse {
     channelId: string;
     channelName: string;
+    hasUnread: boolean;
 }
 
 export interface GroupListResponse {

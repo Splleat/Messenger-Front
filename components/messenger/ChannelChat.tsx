@@ -66,17 +66,21 @@ export function ChannelChat({
             direction: 'initial',
         } as MessagePageParam,
         initialData: {
-            pages: [{
-                messages: messageHistory.messages,
-                hasPrev: messageHistory.hasPrev,
-                prevCursorId: messageHistory.prevCursorId,
-                hasNext: messageHistory.hasNext,
-                nextCursorId: messageHistory.nextCursorId,
-            }],
-            pageParams: [{
-                cursor: null,
-                direction: 'initial',
-            }],
+            pages: [
+                {
+                    messages: messageHistory.messages,
+                    hasPrev: messageHistory.hasPrev,
+                    prevCursorId: messageHistory.prevCursorId,
+                    hasNext: messageHistory.hasNext,
+                    nextCursorId: messageHistory.nextCursorId,
+                },
+            ],
+            pageParams: [
+                {
+                    cursor: null,
+                    direction: 'initial',
+                },
+            ],
         },
         getNextPageParam: (lastPage) => {
             if (!lastPage.hasNext || lastPage.messages.length === 0)
@@ -141,7 +145,11 @@ export function ChannelChat({
                         const currentUserId = session.user.id;
 
                         if (currentUserId && payload.userId !== currentUserId) {
-                            updateChannelLastRead(session, channelId, payload.id);
+                            updateChannelLastRead(
+                                session,
+                                channelId,
+                                payload.id,
+                            );
                         }
 
                         if (!hasNextPageRef.current) {
@@ -203,8 +211,8 @@ export function ChannelChat({
 
     useEffect(() => {
         return () => {
-            queryClient.removeQueries({ queryKey: ['messages', channelId]});
-        }
+            queryClient.removeQueries({ queryKey: ['messages', channelId] });
+        };
     }, [channelId, queryClient]);
 
     return (

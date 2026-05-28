@@ -47,6 +47,7 @@ export async function ChannelSidebar({
                                             {channel.channelName}
                                         </Link>
                                     </span>
+                                    {channel.hasUnread ? <span>안읽음</span> : null}
                                 </div>
                             ))}
 
