@@ -8,13 +8,11 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Plus } from 'lucide-react';
 import { Field, FieldError, FieldGroup } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -23,7 +21,10 @@ import { FormState } from '@/types/common';
 import { validateFormData } from '@/lib/form-validator';
 import { inviteSchema } from '@/schema/messenger';
 
-export function GroupInviteForm({ groupId }: Readonly<{ groupId: string }>) {
+export function GroupInviteDialog({
+    groupId,
+    trigger,
+}: Readonly<{ groupId: string; trigger: React.ReactNode }>) {
     const [open, setOpen] = useState(false);
     const router = useRouter();
     const [state, action, isPending] = useActionState(
@@ -48,16 +49,11 @@ export function GroupInviteForm({ groupId }: Readonly<{ groupId: string }>) {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Plus className="w-4 h-4 text-muted-foreground cursor-pointer hover:text-foreground transition-colors" />
-            </DialogTrigger>
+            <DialogTrigger asChild>{trigger}</DialogTrigger>
             <DialogContent className="sm:max-w-sm">
                 <DialogHeader>
                     <DialogTitle>그룹 초대</DialogTitle>
                 </DialogHeader>
-                <DialogDescription>
-                    초대할 사용자의 아이디를 입력해주세요.
-                </DialogDescription>
                 <form action={action}>
                     <FieldGroup>
                         {state.error ? (

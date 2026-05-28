@@ -5,7 +5,6 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -57,9 +56,6 @@ export function DirectChannelInviteForm({
                 <DialogHeader>
                     <DialogTitle>채널 초대</DialogTitle>
                 </DialogHeader>
-                <DialogDescription>
-                    초대할 사용자의 아이디를 입력해주세요.
-                </DialogDescription>
                 <form action={action}>
                     <FieldGroup>
                         {state.error ? (

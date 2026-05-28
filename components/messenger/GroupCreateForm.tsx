@@ -4,7 +4,6 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -54,7 +53,6 @@ export function GroupCreateForm() {
                 <DialogHeader>
                     <DialogTitle>그룹 생성</DialogTitle>
                 </DialogHeader>
-                <DialogDescription>그룹 이름을 입력해주세요.</DialogDescription>
                 <form action={action}>
                     <FieldGroup>
                         {state.error ? (

@@ -1,13 +1,25 @@
+'use client';
+
 import * as React from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ChevronDown, Hash, Settings } from 'lucide-react';
+import { ChevronDown, Hash, Plus, LogOut } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Session } from 'next-auth';
 import { ChannelCreateForm } from '@/components/messenger/ChannelCreateForm';
+import { GroupInviteDialog } from '@/components/messenger/GroupInviteDialog';
+import { GroupLeaveDialog } from '@/components/messenger/GroupLeaveDialog';
 import Link from 'next/link';
 import { ChannelListResponse, GroupResponse } from '@/types/common';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import LogoutButton from '@/components/auth/LogoutButton';
 
-export async function ChannelSidebar({
+export function ChannelSidebar({
     session,
     group,
     channelList,
@@ -16,12 +28,52 @@ export async function ChannelSidebar({
 
     return (
         <aside className="w-60 h-full flex flex-col bg-secondary/30 border-r border-border shrink-0">
-            <header className="h-12 border-b border-border flex items-center px-4 justify-between hover:bg-accent/50 cursor-pointer transition-colors shadow-sm">
-                <span className="font-bold text-sm text-foreground truncate">
-                    {title}
-                </span>
-                <ChevronDown className="w-4 h-4 text-muted-foreground" />
-            </header>
+            {group ? (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <header className="h-12 border-b border-border flex items-center px-4 justify-between hover:bg-accent/50 cursor-pointer transition-colors shadow-sm">
+                            <span className="font-bold text-sm text-foreground truncate">
+                                {title}
+                            </span>
+                            <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                        </header>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-60" align="start">
+                        <GroupInviteDialog
+                            groupId={group.groupId}
+                            trigger={
+                                <DropdownMenuItem
+                                    onSelect={(e) => e.preventDefault()}
+                                    className="cursor-pointer gap-2"
+                                >
+                                    <Plus className="w-4 h-4" />
+                                    <span>그룹 초대하기</span>
+                                </DropdownMenuItem>
+                            }
+                        />
+                        <DropdownMenuSeparator />
+                        <GroupLeaveDialog
+                            session={session}
+                            groupId={group.groupId}
+                            trigger={
+                                <DropdownMenuItem
+                                    onSelect={(e) => e.preventDefault()}
+                                    className="cursor-pointer gap-2"
+                                >
+                                    <LogOut className="w-4 h-4" />
+                                    <span>그룹 탈퇴하기</span>
+                                </DropdownMenuItem>
+                            }
+                        />
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            ) : (
+                <header className="h-12 border-b border-border flex items-center px-4 justify-between shadow-sm">
+                    <span className="font-bold text-sm text-foreground truncate">
+                        {title}
+                    </span>
+                </header>
+            )}
 
             <ScrollArea className="flex-1">
                 <div className="p-3 space-y-4">
@@ -42,12 +94,18 @@ export async function ChannelSidebar({
                                     <Hash className="w-4 h-4 text-muted-foreground group-hover:text-accent-foreground" />
                                     <span className="truncate font-medium">
                                         <Link
-                                            href={group ? `/main?groupId=${group.groupId}&channelId=${channel.channelId}` : `/main?channelId=${channel.channelId}`}
+                                            href={
+                                                group
+                                                    ? `/main?groupId=${group.groupId}&channelId=${channel.channelId}`
+                                                    : `/main?channelId=${channel.channelId}`
+                                            }
                                         >
                                             {channel.channelName}
                                         </Link>
                                     </span>
-                                    {channel.hasUnread ? <span>안읽음</span> : null}
+                                    {channel.hasUnread ? (
+                                        <span className="ml-auto w-2 h-2 rounded-full bg-destructive animate-pulse" />
+                                    ) : null}
                                 </div>
                             ))}
 
@@ -64,22 +122,15 @@ export async function ChannelSidebar({
             <footer className="p-2 bg-secondary/50 flex items-center gap-2 border-t border-border mt-auto">
                 <Avatar className="w-8 h-8 rounded-full border border-border">
                     <AvatarFallback className="bg-muted text-muted-foreground text-[10px] font-bold">
-                        ME
+                        {session?.user?.username?.[0]?.toUpperCase() || 'ME'}
                     </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
                     <div className="text-[12px] font-bold text-foreground truncate">
                         {session?.user?.username}
                     </div>
-                    <div className="text-[10px] text-muted-foreground truncate leading-none">
-                        Online
-                    </div>
                 </div>
-                <div className="flex items-center gap-1">
-                    <div className="p-1.5 hover:bg-accent rounded-md transition-colors cursor-pointer">
-                        <Settings className="w-4 h-4 text-muted-foreground hover:text-foreground" />
-                    </div>
-                </div>
+                <LogoutButton/>
             </footer>
         </aside>
     );
