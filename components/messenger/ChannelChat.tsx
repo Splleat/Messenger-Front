@@ -17,9 +17,11 @@ import {
     useInfiniteQuery,
     useQueryClient,
 } from '@tanstack/react-query';
-import { fetchMessages } from '@/lib/api-messenger';
+import { fetchMessages, updateChannelLastRead } from '@/lib/api-messenger';
 import { Session } from 'next-auth';
 import { Card, CardContent } from '@/components/ui/card';
+
+const MESSAGE_INDEX_START = 10_000;
 
 export function ChannelChat({
     session,
@@ -64,17 +66,21 @@ export function ChannelChat({
             direction: 'initial',
         } as MessagePageParam,
         initialData: {
-            pages: [{
-                messages: messageHistory.messages,
-                hasPrev: messageHistory.hasPrev,
-                prevCursorId: messageHistory.prevCursorId,
-                hasNext: messageHistory.hasNext,
-                nextCursorId: messageHistory.nextCursorId,
-            }],
-            pageParams: [{
-                cursor: null,
-                direction: 'initial',
-            }],
+            pages: [
+                {
+                    messages: messageHistory.messages,
+                    hasPrev: messageHistory.hasPrev,
+                    prevCursorId: messageHistory.prevCursorId,
+                    hasNext: messageHistory.hasNext,
+                    nextCursorId: messageHistory.nextCursorId,
+                },
+            ],
+            pageParams: [
+                {
+                    cursor: null,
+                    direction: 'initial',
+                },
+            ],
         },
         getNextPageParam: (lastPage) => {
             if (!lastPage.hasNext || lastPage.messages.length === 0)
@@ -100,6 +106,23 @@ export function ChannelChat({
 
     const hasNextPageRef = useRef<boolean>(hasNextPage);
 
+    const previousMessageCount = useMemo(() => {
+        if (!data) return 0;
+
+        return data.pages.reduce((count, page, pageIndex) => {
+            const pageParam = data.pageParams[pageIndex] as MessagePageParam;
+
+            return pageParam.direction === 'up'
+                ? count + page.messages.length
+                : count;
+        }, 0);
+    }, [data]);
+
+    const firstItemIndex = MESSAGE_INDEX_START - previousMessageCount;
+
+    const messages =
+        data?.pages?.flatMap((page) => page.messages).filter(Boolean) ?? [];
+
     useEffect(() => {
         hasNextPageRef.current = hasNextPage;
     }, [hasNextPage]);
@@ -119,7 +142,15 @@ export function ChannelChat({
                             message.body,
                         ) as MessageResponse;
 
-                        console.log(payload);
+                        const currentUserId = session.user.id;
+
+                        if (currentUserId && payload.userId !== currentUserId) {
+                            updateChannelLastRead(
+                                session,
+                                channelId,
+                                payload.id,
+                            );
+                        }
 
                         if (!hasNextPageRef.current) {
                             queryClient.setQueryData<
@@ -178,15 +209,19 @@ export function ChannelChat({
         setContent('');
     }
 
+    useEffect(() => {
+        return () => {
+            queryClient.removeQueries({ queryKey: ['messages', channelId] });
+        };
+    }, [channelId, queryClient]);
+
     return (
         <Card className="flex h-full min-h-0 flex-col overflow-hidden border-none shadow-none bg-background">
             <CardContent className="flex-1 min-h-0 p-0">
                 <MessageList
-                    messages={
-                        data?.pages
-                            ?.flatMap((page) => page.messages)
-                            .filter(Boolean) ?? []
-                    }
+                    key={channelId}
+                    messages={messages}
+                    firstItemIndex={firstItemIndex}
                     onLoadPrevious={() => fetchPreviousPage()}
                     onLoadNext={() => fetchNextPage()}
                     hasPrevious={hasPreviousPage}
@@ -197,7 +232,7 @@ export function ChannelChat({
                 />
             </CardContent>
 
-            <CardContent className="shrink-0 px-4 pb-6 bg-background block">
+            <CardContent className="p-4 bg-background">
                 <ChannelChatInput
                     placeHolder="메시지 전송"
                     value={content}

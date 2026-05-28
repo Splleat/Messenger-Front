@@ -1,22 +1,26 @@
-'use server'
+'use server';
 
 import { Session } from 'next-auth';
 import { authenticatedFetch } from '@/lib/api-auth';
-import { ActionResponse, ApiErrorResponse } from '@/types/common';
+import { ApiErrorResponse, FormState } from '@/types/common';
 
-export async function GroupLeaveAction(session: Session, groupId: string): Promise<ActionResponse> {
+export async function GroupLeaveAction(
+    session: Session,
+    groupId: string,
+): Promise<FormState> {
     const response = await authenticatedFetch(
         session,
-        `http://localhost:8080/groups/${groupId}`, {
-            method: 'DELETE'
+        `http://localhost:8080/groups/${groupId}`,
+        {
+            method: 'DELETE',
         },
     );
 
     if (!response.ok) {
         const error: ApiErrorResponse = await response.json();
 
-        return { success: false, error };
+        return { error: error.message };
     }
 
-    return { success: true };
+    return { error: null };
 }

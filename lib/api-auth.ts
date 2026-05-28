@@ -12,6 +12,7 @@ import {
 import { JWT } from '@auth/core/jwt';
 import { Session } from 'next-auth';
 import { loginSchema } from '@/schema/auth';
+import { signOut } from '@/auth';
 
 export class AuthenticationError extends Error {
     constructor(message = '인증이 만료되었습니다. 다시 로그인해주세요.') {
@@ -29,10 +30,6 @@ export async function authenticatedFetch(
 
     const headers = new Headers(options.headers);
 
-    // if (session?.error) {
-    //     throw new AuthenticationError();
-    // }
-
     if (!session?.accessToken) {
         throw new AuthenticationError('인증 정보가 존재하지 않습니다.');
     }
@@ -48,6 +45,7 @@ export async function authenticatedFetch(
     const response = await fetch(url, { ...options, headers });
 
     if (response.status === 401) {
+        await signOut({redirectTo: '/auth/login'});
         throw new AuthenticationError('인증이 만료되었습니다.');
     }
 
@@ -96,12 +94,8 @@ export async function tokenReissue(
         }),
     });
 
-    console.log('[Token Reissue] Called');
-
     if (response.ok) {
         const data: TokenReissueResponse = await response.json();
-
-        console.log('[Token Reissue]: ', data.accessTokenExpiresIn);
 
         return { success: true, data: data };
     }
