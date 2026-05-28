@@ -33,8 +33,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                     return null;
                 }
 
-                console.log('[login expiresIn]', result.data.accessTokenExpiresIn);
-
                 return {
                     id: result.data.id,
                     username: result.data.username,
@@ -49,12 +47,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     ],
     callbacks: {
         async jwt({ token, user }) {
-            console.log('[JWT]: accessTokenExpires: ', token.accessTokenExpires );
-
             const accessTokenExpires = token.accessTokenExpires ?
                 Number(token.accessTokenExpires) : 0;
-
-            console.log('[JWT]: accessTokenExpires: ', accessTokenExpires);
 
             if (user) {
                 token.id = user.id;
@@ -81,8 +75,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                     error: 'RefreshTokenError',
                 };
             }
-
-            console.log('[Token Reissue] Success')
 
             return {
                 ...token,

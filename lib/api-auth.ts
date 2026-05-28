@@ -94,12 +94,8 @@ export async function tokenReissue(
         }),
     });
 
-    console.log('[Token Reissue] Called');
-
     if (response.ok) {
         const data: TokenReissueResponse = await response.json();
-
-        console.log('[Token Reissue]: ', data.accessTokenExpiresIn);
 
         return { success: true, data: data };
     }
