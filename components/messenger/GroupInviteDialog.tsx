@@ -3,7 +3,7 @@
 import { GroupInviteAction } from '@/actions/messenger/GroupInviteAction';
 import * as React from 'react';
 import { useActionState, useState } from 'react';
-import { useRouter } from 'next/dist/client/components/navigation';
+import { useRouter } from 'next/navigation';
 import {
     Dialog,
     DialogClose,
