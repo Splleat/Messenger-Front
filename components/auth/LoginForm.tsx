@@ -7,46 +7,32 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { zodResolver } from '@hookform/resolvers/zod';
 import {
     Field,
     FieldDescription,
+    FieldError,
     FieldGroup,
     FieldLabel,
     FieldSet,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
-import { LoginFormValues, loginSchema } from '@/types/auth';
-import { useState } from 'react';
-import { signIn } from 'next-auth/react';
-import { redirect } from 'next/navigation';
+import { useActionState } from 'react';
+import { LoginAction } from '@/actions/auth/LoginAction';
+import { FormState } from '@/types/common';
+import { loginSchema } from '@/schema/auth';
+import { validateFormData } from '@/lib/form-validator';
 
 export default function LoginForm() {
-    const [error, setError] = useState<string | null>(null);
+    const [state, action, isPending] = useActionState(async (_prev: FormState, data: FormData) => {
+        const parsed = validateFormData(loginSchema, data);
 
-    const form = useForm<LoginFormValues>({
-        resolver: zodResolver(loginSchema),
-        defaultValues: {
-            email: '',
-            password: '',
-        },
-    });
-
-    const onSubmit = async (data: LoginFormValues) => {
-        const result = await signIn('credentials', {
-            email: data.email,
-            password: data.password,
-            redirect: false
-        });
-
-        if (result?.error) {
-            setError(result.error);
-        } else {
-            redirect('/');
+        if (!parsed.success) {
+            return parsed.state;
         }
-    };
+
+        return await LoginAction(data);
+    }, { error: null });
 
     return (
         <Card className="w-full max-w-sm">
@@ -56,15 +42,16 @@ export default function LoginForm() {
             </CardHeader>
             <CardContent>
                 <FieldSet className="w-full max-w-xs">
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <form action={action}>
                         <FieldGroup>
                             <Field>
                                 <FieldLabel htmlFor="email">이메일</FieldLabel>
                                 <Input
                                     id="email"
+                                    name="email"
                                     type="email"
                                     placeholder="example@example.com"
-                                    {...form.register('email')}
+                                    required
                                 />
                                 <FieldDescription>
                                     이메일을 입력해주세요.
@@ -76,21 +63,24 @@ export default function LoginForm() {
                                 </FieldLabel>
                                 <Input
                                     id="password"
+                                    name="password"
                                     type="password"
                                     placeholder="*****"
-                                    {...form.register('password')}
+                                    required
                                 />
                                 <FieldDescription>
                                     비밀번호를 입력해주세요.
                                 </FieldDescription>
                             </Field>
+                            {state.error ? (
+                                <FieldError
+                                    errors={[{ message: state.error }]}
+                                />
+                            ) : null}
                             <Field>
-                                {error && (
-                                    <p className="text-sm text-red-500">
-                                        {error}
-                                    </p>
-                                )}
-                                <Button type="submit">로그인</Button>
+                                <Button type="submit" disabled={isPending}>
+                                    {isPending ? '로그인 중...' : '로그인'}
+                                </Button>
                             </Field>
                         </FieldGroup>
                     </form>

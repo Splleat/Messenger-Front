@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth';
-import { loginSchema } from '@/types/auth';
 import Credentials from 'next-auth/providers/credentials';
 import { fetchLogin, tokenReissue } from '@/lib/api-auth';
+import { loginSchema } from '@/schema/auth';
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
     session: {

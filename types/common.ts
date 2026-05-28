@@ -1,9 +1,11 @@
-import { z } from 'zod';
-
 export interface ApiErrorResponse {
     code: string;
     message: string;
     timestamp: Date;
+}
+
+export type FormState = {
+    error: string | null
 }
 
 export type ActionResponse<T = void> =
@@ -95,12 +97,6 @@ export type MessagePageParam =
 export interface DirectChannelInviteRequest {
     targetIds: string[]
 }
-
-export const groupCreateSchema = z.object({
-    groupName: z.string().min(2, '그룹 이름은 2글자 이상이어야 합니다.'),
-});
-
-export type GroupCreateFormValues = z.infer<typeof groupCreateSchema>;
 
 export const createValidationError = (
     message: string,
