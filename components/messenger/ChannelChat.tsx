@@ -20,6 +20,7 @@ import {
 import { fetchMessages, updateChannelLastRead } from '@/lib/api-messenger';
 import { Session } from 'next-auth';
 import { Card, CardContent } from '@/components/ui/card';
+import { uuidv7 } from 'uuidv7';
 
 const MESSAGE_INDEX_START = 10_000;
 
@@ -197,7 +198,7 @@ export function ChannelChat({
 
         const request: MessageRequest = {
             content: content,
-            idempotencyKey: crypto.randomUUID(),
+            idempotencyKey: uuidv7(),
             type: 'DIRECT',
         };
 
