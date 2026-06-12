@@ -2,7 +2,7 @@ import { Hash } from 'lucide-react';
 import {
     ChannelListResponse,
     ChannelParticipantResponse,
-    GroupResponse,
+    SpaceResponse,
 } from '@/types/common';
 import * as React from 'react';
 import { DirectChannelInviteForm } from '@/components/messenger/DirectChannelInviteForm';
@@ -14,18 +14,18 @@ export function ChannelHeader({
     session,
     channel,
     participants,
-    group,
+    space,
 }: Readonly<{
     session: Session;
     channel: ChannelListResponse;
     participants: ChannelParticipantResponse[];
-    group?: GroupResponse;
+    space?: SpaceResponse;
 }>) {
-    const inviteComponent = group ? null : (
+    const inviteComponent = space ? null : (
         <DirectChannelInviteForm channelId={channel.channelId} />
     );
 
-    const leaveComponent = group ? null : (
+    const leaveComponent = space ? null : (
         <ChannelLeaveButton session={session} channelId={channel.channelId} />
     );
 

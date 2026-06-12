@@ -3,7 +3,7 @@
 import { Session } from 'next-auth';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { GroupLeaveAction } from '@/actions/messenger/GroupLeaveAction';
+import { SpaceLeaveAction } from '@/actions/messenger/SpaceLeaveAction';
 import {
     Dialog, DialogClose,
     DialogContent,
@@ -15,15 +15,15 @@ import { useActionState, useState } from 'react';
 import { FieldError, FieldGroup } from '@/components/ui/field';
 import * as React from 'react';
 
-export function GroupLeaveDialog({
+export function SpaceLeaveDialog({
     session,
-    groupId,
+    spaceId,
     trigger,
-}: Readonly<{ session: Session; groupId: string; trigger: React.ReactNode }>) {
+}: Readonly<{ session: Session; spaceId: string; trigger: React.ReactNode }>) {
     const [open, setOpen] = useState(false);
     const router = useRouter();
     const [state, action, isPending] = useActionState(async () => {
-        const response = await GroupLeaveAction(session, groupId);
+        const response = await SpaceLeaveAction(session, spaceId);
 
         if (!response.error) {
             setOpen(false);

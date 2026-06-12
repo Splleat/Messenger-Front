@@ -11,7 +11,7 @@ export const MessageItem = React.memo(function MessageItem({
     const mounted = useMounted();
 
     return (
-        <div className="group flex gap-4 px-4 py-3 hover:bg-accent/50 transition-colors">
+        <div className="space flex gap-4 px-4 py-3 hover:bg-accent/50 transition-colors">
             <Avatar className="w-10 h-10 rounded-full shrink-0 border border-border">
                 <AvatarFallback className="bg-muted text-muted-foreground text-xs font-bold">
                     {username?.[0].toUpperCase() || 'ME'}

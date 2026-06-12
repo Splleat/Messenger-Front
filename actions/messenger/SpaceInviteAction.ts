@@ -1,29 +1,34 @@
 'use server';
 
-import { auth } from '@/auth';
 import {
     ApiErrorResponse,
     FormState,
-    GroupCreateRequest,
+    SpaceInviteRequest,
 } from '@/types/common';
 import { authenticatedFetch } from '@/lib/api-auth';
+import { auth } from '@/auth';
 import { validateFormData } from '@/lib/form-validator';
-import { groupCreateSchema } from '@/schema/messenger';
+import { inviteSchema } from '@/schema/messenger';
 
-export async function GroupCreateAction(data: FormData): Promise<FormState> {
+export async function SpaceInviteAction(
+    data: FormData,
+    spaceId: string,
+): Promise<FormState> {
     const session = await auth();
 
-    const validation = validateFormData(groupCreateSchema, data);
+    const validation = validateFormData(inviteSchema, data);
 
     if (!validation.success) {
         return validation.state;
     }
 
-    const request: GroupCreateRequest = validation.data;
+    const request: SpaceInviteRequest = {
+        targetIds: [validation.data.targetId],
+    };
 
     const response = await authenticatedFetch(
         session,
-        'http://localhost:8080/groups',
+        `http://localhost:8080/spaces/${spaceId}`,
         {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

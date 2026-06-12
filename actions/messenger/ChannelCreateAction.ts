@@ -12,7 +12,7 @@ import { channelCreateSchema } from '@/schema/messenger';
 
 export async function ChannelCreateAction(
     data: FormData,
-    groupId?: string,
+    spaceId?: string,
 ): Promise<FormState> {
     const session = await auth();
 
@@ -22,8 +22,8 @@ export async function ChannelCreateAction(
         return validation.state;
     }
 
-    const url = groupId
-        ? `http://localhost:8080/groups/${groupId}/channels`
+    const url = spaceId
+        ? `http://localhost:8080/spaces/${spaceId}/channels`
         : 'http://localhost:8080/channels';
 
     const request: ChannelCreateRequest = {

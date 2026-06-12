@@ -62,7 +62,7 @@ export function DirectChannelInviteForm({
                             <FieldError errors={[{ message: state.error }]} />
                         ) : null}
                         <Field>
-                            <Label htmlFor="groupName">사용자 아이디</Label>
+                            <Label htmlFor="spaceName">사용자 아이디</Label>
                             <Input id="targetId" name="targetId" required />
                         </Field>
                     </FieldGroup>

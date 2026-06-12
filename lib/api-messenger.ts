@@ -2,8 +2,8 @@ import {
     ChannelListResponse,
     ChannelMessagePage,
     ChannelParticipantResponse,
-    GroupListResponse,
-    GroupResponse,
+    SpaceListResponse,
+    SpaceResponse,
     MessagePageParam,
     MessagePageResponse,
     MessageResponse,
@@ -26,17 +26,17 @@ export async function fetchChannelList(session: Session) {
     return data;
 }
 
-export async function fetchGroupList(session: Session) {
+export async function fetchSpaceList(session: Session) {
     const response = await authenticatedFetch(
         session,
-        'http://localhost:8080/groups',
+        'http://localhost:8080/spaces',
     );
 
     if (!response.ok) {
         return [];
     }
 
-    const data: GroupListResponse[] = await response.json();
+    const data: SpaceListResponse[] = await response.json();
 
     return data;
 }
@@ -140,9 +140,9 @@ export async function fetchCursorNextMessage(session: Session, channelId: string
 }
 
 // 채널 입장
-export async function fetchChannelEnterMessages(session: Session, channelId: string, groupId?: string): Promise<ChannelMessagePage> {
-    const url = groupId ?
-        `http://localhost:8080/groups/${groupId}/channels/${channelId}` :
+export async function fetchChannelEnterMessages(session: Session, channelId: string, spaceId?: string): Promise<ChannelMessagePage> {
+    const url = spaceId ?
+        `http://localhost:8080/spaces/${spaceId}/channels/${channelId}` :
         `http://localhost:8080/channels/${channelId}`;
 
     const response = await authenticatedFetch(
@@ -157,17 +157,17 @@ export async function fetchChannelEnterMessages(session: Session, channelId: str
     return await response.json();
 }
 
-export async function fetchGroup(session: Session, groupId: string) {
+export async function fetchSpace(session: Session, spaceId: string) {
     const response = await authenticatedFetch(
         session,
-        `http://localhost:8080/groups/${groupId}`
+        `http://localhost:8080/spaces/${spaceId}`
     );
 
     if (!response.ok) {
         return undefined;
     }
 
-    const data: GroupResponse = await response.json();
+    const data: SpaceResponse = await response.json();
 
     return data;
 }

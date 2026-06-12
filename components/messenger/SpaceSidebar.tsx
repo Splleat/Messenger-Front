@@ -1,30 +1,30 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { GroupIcon } from '@/components/messenger/GroupIcon';
-import { GroupCreateForm } from '@/components/messenger/GroupCreateForm';
-import { GroupListResponse } from '@/types/common';
+import { SpaceIcon } from '@/components/messenger/SpaceIcon';
+import { SpaceCreateForm } from '@/components/messenger/SpaceCreateForm';
+import { SpaceListResponse } from '@/types/common';
 
-export async function GroupSidebar({
-    groupList,
-}: Readonly<{ groupList: GroupListResponse[] }>) {
+export async function SpaceSidebar({
+    spaceList,
+}: Readonly<{ spaceList: SpaceListResponse[] }>) {
     return (
         <aside className="w-18 h-full flex flex-col items-center py-3 bg-card border-r border-border shrink-0">
             <TooltipProvider delayDuration={0}>
-                <GroupIcon link={'/main'} name="개인 채널" />
+                <SpaceIcon link={'/main'} name="개인 채널" />
 
                 <Separator className="w-8 h-0.5 bg-border rounded-full mb-2" />
 
                 <ScrollArea className="flex-1 w-full">
                     <div className="flex flex-col items-center gap-3 px-2">
-                        {groupList.map((group) => (
-                            <GroupIcon
-                                key={group.groupId}
-                                link={`/main?groupId=${group.groupId}`}
-                                name={group.groupName}
+                        {spaceList.map((space) => (
+                            <SpaceIcon
+                                key={space.spaceId}
+                                link={`/main?spaceId=${space.spaceId}`}
+                                name={space.spaceName}
                             />
                         ))}
-                        <GroupCreateForm />
+                        <SpaceCreateForm />
                     </div>
                 </ScrollArea>
             </TooltipProvider>

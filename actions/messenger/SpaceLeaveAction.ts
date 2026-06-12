@@ -4,13 +4,13 @@ import { Session } from 'next-auth';
 import { authenticatedFetch } from '@/lib/api-auth';
 import { ApiErrorResponse, FormState } from '@/types/common';
 
-export async function GroupLeaveAction(
+export async function SpaceLeaveAction(
     session: Session,
-    groupId: string,
+    spaceId: string,
 ): Promise<FormState> {
     const response = await authenticatedFetch(
         session,
-        `http://localhost:8080/groups/${groupId}`,
+        `http://localhost:8080/spaces/${spaceId}`,
         {
             method: 'DELETE',
         },

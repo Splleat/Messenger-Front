@@ -32,7 +32,7 @@ export function ChannelChat({
 }: Readonly<{
     session: Session;
     channelId: string;
-    groupId?: string;
+    spaceId?: string;
     accessToken: string;
     messageHistory: ChannelEnterResponse;
 }>) {

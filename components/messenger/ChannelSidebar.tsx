@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Session } from 'next-auth';
 import { ChannelCreateDialog } from '@/components/messenger/ChannelCreateDialog';
 import Link from 'next/link';
-import { ChannelListResponse, GroupResponse } from '@/types/common';
+import { ChannelListResponse, SpaceResponse } from '@/types/common';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -27,16 +27,16 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { GroupInviteDialog } from '@/components/messenger/GroupInviteDialog';
-import { GroupLeaveDialog } from '@/components/messenger/GroupLeaveDialog';
+import { SpaceInviteDialog } from '@/components/messenger/SpaceInviteDialog';
+import { SpaceLeaveDialog } from '@/components/messenger/SpaceLeaveDialog';
 import LogoutButton from '@/components/auth/LogoutButton';
 
 export function ChannelSidebar({
     session,
-    group,
+    space,
     channelList,
-}: Readonly<{ session: Session; group?: GroupResponse; channelList: ChannelListResponse[] }>) {
-    const title = group ? group.groupName : '개인 채널';
+}: Readonly<{ session: Session; space?: SpaceResponse; channelList: ChannelListResponse[] }>) {
+    const title = space ? space.spaceName : '개인 채널';
 
     return (
         <Sidebar
@@ -44,7 +44,7 @@ export function ChannelSidebar({
             className="bg-secondary/30 border-r border-border"
         >
             <SidebarHeader className="p-0 border-b border-border">
-                {group ? (
+                {space ? (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <button className="h-12 w-full flex items-center px-4 justify-between hover:bg-accent/50 cursor-pointer transition-colors shadow-sm outline-none">
@@ -55,8 +55,8 @@ export function ChannelSidebar({
                             </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-52" align="start">
-                            <GroupInviteDialog
-                                groupId={group.groupId}
+                            <SpaceInviteDialog
+                                spaceId={space.spaceId}
                                 trigger={
                                     <DropdownMenuItem
                                         onSelect={(e) => e.preventDefault()}
@@ -68,9 +68,9 @@ export function ChannelSidebar({
                                 }
                             />
                             <DropdownMenuSeparator />
-                            <GroupLeaveDialog
+                            <SpaceLeaveDialog
                                 session={session}
-                                groupId={group.groupId}
+                                spaceId={space.spaceId}
                                 trigger={
                                     <DropdownMenuItem
                                         variant="destructive"
@@ -99,7 +99,7 @@ export function ChannelSidebar({
                             텍스트 채널
                         </SidebarGroupLabel>
                         <ChannelCreateDialog
-                            groupId={group?.groupId}
+                            spaceId={space?.spaceId}
                             trigger={
                                 <Plus className="w-4 h-4 text-muted-foreground cursor-pointer hover:text-foreground transition-colors" />
                             }
@@ -116,8 +116,8 @@ export function ChannelSidebar({
                                     <SidebarMenuButton asChild className="h-8">
                                         <Link
                                             href={
-                                                group
-                                                    ? `/main?groupId=${group.groupId}&channelId=${channel.channelId}`
+                                                space
+                                                    ? `/main?spaceId=${space.spaceId}&channelId=${channel.channelId}`
                                                     : `/main?channelId=${channel.channelId}`
                                             }
                                             className="flex items-center gap-2"

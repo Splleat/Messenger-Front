@@ -18,22 +18,22 @@ export interface ChannelListResponse {
     hasUnread: boolean;
 }
 
-export interface GroupListResponse {
-    groupId: string;
-    groupName: string;
+export interface SpaceListResponse {
+    spaceId: string;
+    spaceName: string;
 }
 
-export interface GroupCreateRequest {
-    groupName: string;
+export interface SpaceCreateRequest {
+    spaceName: string;
 }
 
-export interface GroupInviteRequest {
+export interface SpaceInviteRequest {
     targetIds: string[];
 }
 
-export interface GroupResponse {
-    groupId: string;
-    groupName: string;
+export interface SpaceResponse {
+    spaceId: string;
+    spaceName: string;
     channelList: ChannelListResponse[];
 }
 

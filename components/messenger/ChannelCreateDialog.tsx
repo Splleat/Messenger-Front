@@ -23,9 +23,9 @@ import { validateFormData } from '@/lib/form-validator';
 import { channelCreateSchema } from '@/schema/messenger';
 
 export function ChannelCreateDialog({
-    groupId,
+    spaceId,
     trigger,
-}: Readonly<{ groupId?: string; trigger: React.ReactNode }>) {
+}: Readonly<{ spaceId?: string; trigger: React.ReactNode }>) {
     const [open, setOpen] = useState(false);
     const router = useRouter();
     const [state, action, isPending] = useActionState(
@@ -36,7 +36,7 @@ export function ChannelCreateDialog({
                 return parsed.state;
             }
 
-            const response = await ChannelCreateAction(data, groupId);
+            const response = await ChannelCreateAction(data, spaceId);
 
             if (!response.error) {
                 setOpen(false);

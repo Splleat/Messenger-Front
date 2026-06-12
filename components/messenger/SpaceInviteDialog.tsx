@@ -1,5 +1,9 @@
 'use client';
 
+import { SpaceInviteAction } from '@/actions/messenger/SpaceInviteAction';
+import * as React from 'react';
+import { useActionState, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
     Dialog,
     DialogClose,
@@ -9,30 +13,29 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Field, FieldError, FieldGroup } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { GroupCreateAction } from '@/actions/messenger/GroupCreateAction';
+import { Button } from '@/components/ui/button';
 import { FormState } from '@/types/common';
-import { useRouter } from 'next/navigation';
-import * as React from 'react';
-import { useActionState, useState } from 'react';
 import { validateFormData } from '@/lib/form-validator';
-import { groupCreateSchema } from '@/schema/messenger';
+import { inviteSchema } from '@/schema/messenger';
 
-export function GroupCreateForm() {
+export function SpaceInviteDialog({
+    spaceId,
+    trigger,
+}: Readonly<{ spaceId: string; trigger: React.ReactNode }>) {
     const [open, setOpen] = useState(false);
     const router = useRouter();
     const [state, action, isPending] = useActionState(
         async (_prev: FormState, data: FormData) => {
-            const parsed = validateFormData(groupCreateSchema, data);
+            const parsed = validateFormData(inviteSchema, data);
 
             if (!parsed.success) {
                 return parsed.state;
             }
 
-            const response = await GroupCreateAction(data);
+            const response = await SpaceInviteAction(data, spaceId);
 
             if (!response.error) {
                 setOpen(false);
@@ -46,12 +49,10 @@ export function GroupCreateForm() {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button variant="outline">+</Button>
-            </DialogTrigger>
+            <DialogTrigger asChild>{trigger}</DialogTrigger>
             <DialogContent className="sm:max-w-sm">
                 <DialogHeader>
-                    <DialogTitle>그룹 생성</DialogTitle>
+                    <DialogTitle>그룹 초대</DialogTitle>
                 </DialogHeader>
                 <form action={action}>
                     <FieldGroup>
@@ -59,8 +60,8 @@ export function GroupCreateForm() {
                             <FieldError errors={[{ message: state.error }]} />
                         ) : null}
                         <Field>
-                            <Label htmlFor="groupName">그룹명</Label>
-                            <Input id="groupName" name="groupName" required />
+                            <Label htmlFor="spaceName">사용자 아이디</Label>
+                            <Input id="targetId" name="targetId" required />
                         </Field>
                     </FieldGroup>
                     <DialogFooter>
@@ -68,7 +69,7 @@ export function GroupCreateForm() {
                             <Button variant="outline">취소</Button>
                         </DialogClose>
                         <Button type="submit" disabled={isPending}>
-                            {isPending ? '생성 중...' : '생성하기'}
+                            {isPending ? '초대 중...' : '초대하기'}
                         </Button>
                     </DialogFooter>
                 </form>
