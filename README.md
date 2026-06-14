@@ -36,6 +36,36 @@
 
 ---
 
+## 프로젝트 구조
+
+```text
+.
+├── app/                       # Next.js App Router (페이지 · 레이아웃 · 라우트 핸들러)
+│   ├── (messenger)/main/      # 메신저 메인 페이지
+│   ├── auth/                  # 로그인 · 회원가입 페이지
+│   └── api/auth/              # NextAuth 라우트 핸들러
+│
+├── actions/                   # 서버 액션
+│   ├── auth/                  # 로그인 · 로그아웃 · 회원가입
+│   └── messenger/             # 스페이스 · 채널 생성/초대/탈퇴
+│
+├── components/                # UI 컴포넌트
+│   ├── auth/                  # 인증 관련 컴포넌트
+│   ├── messenger/             # 채널 채팅 · 사이드바 · 메시지 리스트
+│   ├── common/                # 공통 컴포넌트
+│   └── ui/                    # shadcn
+│
+├── hooks/                     # 커스텀 훅
+├── lib/                       # API 통신 함수 · 유틸 · 클라이언트 상태
+├── schema/                    # Zod 검증 스키마
+├── types/                     # 타입 정의
+│
+├── auth.ts                    # NextAuth 설정
+└── proxy.ts                   # 미들웨어
+```
+
+---
+
 ## 실행 방법
 
 ### 사전 요구사항
