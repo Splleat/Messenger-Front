@@ -3,7 +3,7 @@ import { NextResponse } from 'next/dist/server/web/spec-extension/response';
 
 export default auth((request) => {
     const { nextUrl } = request;
-    const isLoggedIn = !!request.auth;
+    const isLoggedIn = !!request.auth && request.auth.error !== 'RefreshTokenError';
 
     const isPublicRoute =
         nextUrl.pathname.startsWith('/auth/login') ||

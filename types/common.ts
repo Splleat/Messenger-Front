@@ -1,5 +1,4 @@
 export interface ApiErrorResponse {
-    code: string;
     message: string;
     timestamp: Date;
 }
@@ -104,7 +103,6 @@ export const createValidationError = (
 ): ActionResponse<never> => ({
     success: false,
     error: {
-        code: 'VALIDATION_ERROR',
         message,
         timestamp: new Date(),
     },
@@ -113,7 +111,6 @@ export const createValidationError = (
 export const createAuthError = (message: string): ActionResponse<never> => ({
     success: false,
     error: {
-        code: 'UNAUTHENTICATED',
         message,
         timestamp: new Date(),
     },
