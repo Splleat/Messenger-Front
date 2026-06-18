@@ -2,12 +2,15 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { MessageResponse } from '@/types/common';
 import React from 'react';
 import { useMounted } from '@/hooks/use-mounted';
+import { AttachmentRenderer } from '@/components/messenger/AttachmentRenderer';
 
 export const MessageItem = React.memo(function MessageItem({
     username,
     content,
     createdAt,
+    attachments
 }: Readonly<MessageResponse>) {
+    const hasAttachment = attachments && attachments.length > 0;
     const mounted = useMounted();
 
     return (
@@ -29,6 +32,13 @@ export const MessageItem = React.memo(function MessageItem({
                 <p className="text-sm leading-7 text-foreground/90">
                     {content}
                 </p>
+                {hasAttachment && (
+                    <div className="flex items-center gap-2">
+                        {attachments.map((attachment) => (
+                            <AttachmentRenderer key={attachment.id} attachment={attachment} />
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

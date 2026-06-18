@@ -52,6 +52,7 @@ export interface MessageRequest {
     content: string;
     idempotencyKey: string;
     type: string;
+    attachments?: AttachmentCreateRequest[];
 }
 
 export interface MessageResponse {
@@ -63,6 +64,7 @@ export interface MessageResponse {
     content: string;
     type: string;
     parentMessageId: string;
+    attachments: AttachmentResponse[];
     createdAt: string;
 }
 
@@ -87,6 +89,29 @@ export interface ChannelMessagePage {
     hasNext: boolean;
     prevCursorId?: string;
     nextCursorId?: string;
+}
+
+export interface AttachmentCreateRequest {
+    type: string;
+    url: string;
+}
+
+export interface AttachmentResponse {
+    id: string;
+    messageId: string;
+    type: string;
+    url: string;
+}
+
+export interface PresignRequest {
+    fileName: string;
+    contentType: string;
+    size: number;
+}
+
+export interface PresignResponse {
+    uploadUrl: string;
+    objectKey: string;
 }
 
 export type MessagePageParam =

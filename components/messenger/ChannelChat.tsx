@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { ChannelEnterResponse, MessageRequest } from '@/types/common';
 import { ChannelChatInput } from '@/components/messenger/ChannelChatInput';
 import { MessageList } from '@/components/messenger/MessageList';
@@ -9,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { uuidv7 } from 'uuidv7';
 import { useChannelMessages } from '@/hooks/use-channel-messages';
 import { useChannelSocket } from '@/hooks/use-channel-socket';
+import { useStorageUpload } from '@/hooks/use-storage-upload';
 
 export function ChannelChat({
     session,
@@ -22,8 +22,6 @@ export function ChannelChat({
     accessToken: string;
     messageHistory: ChannelEnterResponse;
 }>) {
-    const [content, setContent] = useState('');
-
     const {
         messages,
         firstItemIndex,
@@ -45,18 +43,35 @@ export function ChannelChat({
         onReconnect: syncFrom,
     });
 
-    function handleSubmit() {
-        if (!content.trim()) return;
+    const { uploadFile, isUploading } = useStorageUpload(session);
+
+    async function handleSubmit(text: string, file?: File) {
+        if (!file && !text.trim()) {
+            return;
+        }
 
         const request: MessageRequest = {
-            content: content,
+            content: text,
             idempotencyKey: uuidv7(),
             type: 'DIRECT',
         };
 
-        sendMessage(request);
+        if (file) {
+            const objectKey = await uploadFile(file);
+            const isImage = file.type.startsWith('image/');
 
-        setContent('');
+            sendMessage({
+                attachments: [
+                    {
+                        type: isImage ? 'image' : 'file',
+                        url: objectKey,
+                    },
+                ],
+                ...request,
+            });
+        } else {
+            sendMessage(request);
+        }
     }
 
     return (
@@ -79,8 +94,6 @@ export function ChannelChat({
             <CardContent className="p-4 bg-background">
                 <ChannelChatInput
                     placeHolder="메시지 전송"
-                    value={content}
-                    onChange={setContent}
                     onSubmit={handleSubmit}
                 />
             </CardContent>
