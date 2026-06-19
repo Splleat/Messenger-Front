@@ -8,16 +8,13 @@ export function AttachmentRenderer({
 }: Readonly<{ attachment: AttachmentResponse }>) {
     const { type, url } = attachment;
 
-    const minioBucketUrl = 'http://localhost:9000/messenger';
-    const absoluteUrl = `${minioBucketUrl}/${url}`;
-
     const fileName = url.substring(url.lastIndexOf('/') + 1);
 
     return (
         <Card className="hover:bg-accent/50 transition-colors cursor-pointer w-96">
             <CardContent className="flex items-center gap-3">
                 <a
-                    href={absoluteUrl}
+                    href={url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="content"
@@ -33,7 +30,7 @@ export function AttachmentRenderer({
                 </div>
                 <div>
                     <DownloadIcon
-                        onClick={() => downloadFile(absoluteUrl, fileName)}
+                        onClick={() => downloadFile(url, fileName)}
                     />
                 </div>
             </CardContent>

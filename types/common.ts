@@ -114,6 +114,19 @@ export interface PresignResponse {
     objectKey: string;
 }
 
+export interface MyProfileResponse {
+    email: string;
+    name: string;
+    imageUrl?: string;
+    statusMessage?: string;
+}
+
+export interface ProfileResponse {
+    name: string;
+    imageUrl?: string;
+    statusMessage?: string;
+}
+
 export type MessagePageParam =
     | { direction: 'initial'; cursor: string | null }
     | { direction: 'up'; cursor: string }

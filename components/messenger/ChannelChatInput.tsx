@@ -55,7 +55,6 @@ export function ChannelChatInput({
                         onClick={() => setSelectedFile(null)}
                         className="text-muted-foreground hover:text-foreground"
                     >
-                        ✕
                     </button>
                 </div>
             )}

@@ -2,11 +2,11 @@ import {
     ChannelListResponse,
     ChannelMessagePage,
     ChannelParticipantResponse,
-    SpaceListResponse,
-    SpaceResponse,
     MessagePageParam,
     MessagePageResponse,
     MessageResponse,
+    SpaceListResponse,
+    SpaceResponse,
 } from '@/types/common';
 import { Session } from 'next-auth';
 import { authenticatedFetch } from '@/lib/api-auth';
@@ -41,7 +41,10 @@ export async function fetchSpaceList(session: Session) {
     return data;
 }
 
-export async function fetchChannelParticipants(session: Session, channelId: string) {
+export async function fetchChannelParticipants(
+    session: Session,
+    channelId: string,
+) {
     const response = await authenticatedFetch(
         session,
         `http://localhost:8080/channels/${channelId}/participants`,
@@ -56,7 +59,10 @@ export async function fetchChannelParticipants(session: Session, channelId: stri
     return data;
 }
 
-export async function fetchDirectChannelMessageList(session: Session, channelId: string) {
+export async function fetchDirectChannelMessageList(
+    session: Session,
+    channelId: string,
+) {
     const response = await authenticatedFetch(
         session,
         `http://localhost:8080/channels/${channelId}/messages`,
@@ -71,7 +77,11 @@ export async function fetchDirectChannelMessageList(session: Session, channelId:
     return data;
 }
 
-export async function fetchMessages(session: Session, param: MessagePageParam, channelId: string): Promise<ChannelMessagePage> {
+export async function fetchMessages(
+    session: Session,
+    param: MessagePageParam,
+    channelId: string,
+): Promise<ChannelMessagePage> {
     switch (param.direction) {
         case 'up': {
             const data = await fetchCursorPrevMessage(
@@ -102,7 +112,7 @@ export async function fetchMessages(session: Session, param: MessagePageParam, c
                 nextCursorId: data.cursorId,
                 hasPrev: false,
                 prevCursorId: undefined,
-            }
+            };
         }
         default:
             throw new Error('처리되지 않은 케이스');
@@ -126,7 +136,11 @@ export async function fetchCursorPrevMessage(
     return await response.json();
 }
 
-export async function fetchCursorNextMessage(session: Session, channelId: string, cursorId: string): Promise<MessagePageResponse> {
+export async function fetchCursorNextMessage(
+    session: Session,
+    channelId: string,
+    cursorId: string,
+): Promise<MessagePageResponse> {
     const response = await authenticatedFetch(
         session,
         `http://localhost:8080/channels/${channelId}/messages?cursorId=${cursorId}&direction=next`,
@@ -140,15 +154,16 @@ export async function fetchCursorNextMessage(session: Session, channelId: string
 }
 
 // 채널 입장
-export async function fetchChannelEnterMessages(session: Session, channelId: string, spaceId?: string): Promise<ChannelMessagePage> {
-    const url = spaceId ?
-        `http://localhost:8080/spaces/${spaceId}/channels/${channelId}` :
-        `http://localhost:8080/channels/${channelId}`;
+export async function fetchChannelEnterMessages(
+    session: Session,
+    channelId: string,
+    spaceId?: string,
+): Promise<ChannelMessagePage> {
+    const url = spaceId
+        ? `http://localhost:8080/spaces/${spaceId}/channels/${channelId}`
+        : `http://localhost:8080/channels/${channelId}`;
 
-    const response = await authenticatedFetch(
-        session,
-        url
-    );
+    const response = await authenticatedFetch(session, url);
 
     if (!response.ok) {
         // TODO: fallback
@@ -160,7 +175,7 @@ export async function fetchChannelEnterMessages(session: Session, channelId: str
 export async function fetchSpace(session: Session, spaceId: string) {
     const response = await authenticatedFetch(
         session,
-        `http://localhost:8080/spaces/${spaceId}`
+        `http://localhost:8080/spaces/${spaceId}`,
     );
 
     if (!response.ok) {
@@ -175,11 +190,11 @@ export async function fetchSpace(session: Session, spaceId: string) {
 export async function updateChannelLastRead(
     session: Session,
     channelId: string,
-    lastReadMessageId: string
+    lastReadMessageId: string,
 ) {
     await authenticatedFetch(
         session,
         `http://localhost:8080/channels/${channelId}/read`,
-        { method: 'PATCH', body: JSON.stringify({ lastReadMessageId }) }
+        { method: 'PATCH', body: JSON.stringify({ lastReadMessageId }) },
     );
 }
