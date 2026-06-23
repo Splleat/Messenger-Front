@@ -55,6 +55,30 @@ export interface MessageRequest {
     attachments?: AttachmentCreateRequest[];
 }
 
+export type MessageEventType = 'CREATED' | 'UPDATED' | 'DELETED';
+
+export interface MessageEvent<T> {
+    messageId: string;
+    channelId: string;
+    type: MessageEventType;
+    data: T;
+}
+
+export interface MessageCreatedData {
+    message: MessageResponse;
+}
+
+export interface MessageUpdatedData {
+    messageId: string;
+    channelId: string;
+    content: string;
+}
+
+export interface MessageDeletedData {
+    messageId: string;
+    channelId: string;
+}
+
 export interface MessageResponse {
     id: string;
     userId: string;

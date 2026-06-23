@@ -1,4 +1,9 @@
-import { MessageRequest, MessageResponse } from '@/types/common';
+import {
+    MessageCreatedData,
+    MessageEvent,
+    MessageRequest,
+    MessageResponse,
+} from '@/types/common';
 import { useCallback, useEffect, useRef } from 'react';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
@@ -30,9 +35,23 @@ export function useChannelSocket({
                     (message) => {
                         const payload = JSON.parse(
                             message.body,
-                        ) as MessageResponse;
+                        ) as MessageEvent<unknown>;
 
-                        onMessage(payload);
+                        switch (payload.type) {
+                            case 'CREATED':
+                                onMessage(
+                                    (payload.data as MessageCreatedData).message,
+                                );
+                                break;
+                            case 'UPDATED':
+                                // TODO: 메시지 업데이트
+                                break;
+                            case 'DELETED':
+                                // TODO: 메시지 삭제 처리
+                                break;
+                            default:
+                                break;
+                        }
                     },
                 );
                 if (hasConnectedRef.current) {
