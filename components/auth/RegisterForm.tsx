@@ -6,6 +6,7 @@ import {
     Card,
     CardContent,
     CardDescription,
+    CardFooter,
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
@@ -22,6 +23,7 @@ import { Button } from '@/components/ui/button';
 import { FormState } from '@/types/common';
 import { registerSchema } from '@/schema/auth';
 import { validateFormData } from '@/lib/form-validator';
+import Link from 'next/link';
 
 export default function RegisterForm() {
     const [state, action, isPending] = useActionState(
@@ -38,7 +40,7 @@ export default function RegisterForm() {
     );
 
     return (
-        <Card className="w-full sm:max-w-md">
+        <Card className="w-full max-w-sm">
             <CardHeader>
                 <CardTitle>회원가입</CardTitle>
                 <CardDescription>
@@ -101,6 +103,14 @@ export default function RegisterForm() {
                     </form>
                 </FieldSet>
             </CardContent>
+            <CardFooter className="justify-center">
+                <Link
+                    href="/auth/login"
+                    className="text-primary hover:underline"
+                >
+                    로그인 페이지로 이동
+                </Link>
+            </CardFooter>
         </Card>
     );
 }

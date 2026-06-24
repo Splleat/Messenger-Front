@@ -5,6 +5,7 @@ import React from 'react';
 import { ThemeProvider } from '@/components/theme-provider';
 import NextAuthProvider from '@/components/auth/NextAuthProvider';
 import { QueryProvider } from '@/components/query-provider';
+import { Toaster } from '@/components/ui/sonner';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,16 +20,19 @@ export default function RootLayout({
     return (
         <html lang="ko" suppressHydrationWarning>
             <body className={inter.className}>
-            <QueryProvider>
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    <NextAuthProvider>{children}</NextAuthProvider>
-                </ThemeProvider>
-            </QueryProvider>
+                <QueryProvider>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        <NextAuthProvider>
+                            <main>{children}</main>
+                            <Toaster />
+                        </NextAuthProvider>
+                    </ThemeProvider>
+                </QueryProvider>
             </body>
         </html>
     );

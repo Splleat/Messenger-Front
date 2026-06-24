@@ -3,7 +3,7 @@
 import {
     Card,
     CardContent,
-    CardDescription,
+    CardDescription, CardFooter,
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
@@ -22,6 +22,7 @@ import { LoginAction } from '@/actions/auth/LoginAction';
 import { FormState } from '@/types/common';
 import { loginSchema } from '@/schema/auth';
 import { validateFormData } from '@/lib/form-validator';
+import Link from "next/link";
 
 export default function LoginForm() {
     const [state, action, isPending] = useActionState(async (_prev: FormState, data: FormData) => {
@@ -78,7 +79,7 @@ export default function LoginForm() {
                                 />
                             ) : null}
                             <Field>
-                                <Button type="submit" disabled={isPending}>
+                                <Button type="submit" disabled={isPending} className="w-full">
                                     {isPending ? '로그인 중...' : '로그인'}
                                 </Button>
                             </Field>
@@ -86,6 +87,9 @@ export default function LoginForm() {
                     </form>
                 </FieldSet>
             </CardContent>
+            <CardFooter className="justify-center">
+                <Link href="/auth/register" className="text-primary hover:underline">회원가입 페이지로 이동</Link>
+            </CardFooter>
         </Card>
     );
 }

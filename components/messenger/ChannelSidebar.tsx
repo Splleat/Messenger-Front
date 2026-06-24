@@ -1,12 +1,19 @@
 'use client';
 
 import * as React from 'react';
-import { ChevronDown, Hash, Plus, LogOut } from 'lucide-react';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { useEffect, useState } from 'react';
+import { ChevronDown, Hash, LogOut, Plus } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Session } from 'next-auth';
 import { ChannelCreateDialog } from '@/components/messenger/ChannelCreateDialog';
 import Link from 'next/link';
-import { ChannelListResponse, SpaceResponse } from '@/types/common';
+import {
+    ChannelListResponse,
+    MyProfileResponse,
+    SpaceResponse,
+} from '@/types/common';
+import { ProfileEditModal } from '@/components/user/ProfileEditModal';
+import { fetchMyProfile } from '@/lib/api-user';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -35,8 +42,18 @@ export function ChannelSidebar({
     session,
     space,
     channelList,
-}: Readonly<{ session: Session; space?: SpaceResponse; channelList: ChannelListResponse[] }>) {
+}: Readonly<{
+    session: Session;
+    space?: SpaceResponse;
+    channelList: ChannelListResponse[];
+}>) {
     const title = space ? space.spaceName : '개인 채널';
+    const [profileOpen, setProfileOpen] = useState(false);
+    const [myProfile, setMyProfile] = useState<MyProfileResponse | null>(null);
+
+    useEffect(() => {
+        fetchMyProfile(session).then(setMyProfile);
+    }, [session]);
 
     return (
         <Sidebar
@@ -148,7 +165,14 @@ export function ChannelSidebar({
 
             <SidebarFooter className="p-2 bg-secondary/50 border-t border-border">
                 <div className="flex items-center gap-2 w-full">
-                    <Avatar className="w-8 h-8 rounded-full border border-border">
+                    <Avatar
+                        className="w-8 h-8 rounded-full border border-border cursor-pointer hover:opacity-80 transition-opacity"
+                        onClick={() => setProfileOpen(true)}
+                    >
+                        <AvatarImage
+                            src={myProfile?.imageUrl}
+                            className="object-cover"
+                        />
                         <AvatarFallback className="bg-muted text-muted-foreground text-[10px] font-bold">
                             {session?.user?.username?.[0]?.toUpperCase() ||
                                 'ME'}
@@ -156,11 +180,17 @@ export function ChannelSidebar({
                     </Avatar>
                     <div className="flex-1 min-w-0">
                         <div className="text-[12px] font-bold text-foreground truncate">
-                            {session?.user?.username}
+                            {myProfile?.name ?? session?.user?.username}
                         </div>
                     </div>
                     <LogoutButton />
                 </div>
+                <ProfileEditModal
+                    session={session}
+                    open={profileOpen}
+                    onOpenChange={setProfileOpen}
+                    onProfileUpdate={(updated) => setMyProfile(updated)}
+                />
             </SidebarFooter>
         </Sidebar>
     );
