@@ -11,7 +11,7 @@ const csp = [
     `style-src 'self' 'unsafe-inline'`,
     `img-src 'self' data: blob: ${S3}`,
     `font-src 'self' data:`,
-    `connect-src 'self' ${API} ${WS}`,
+    `connect-src 'self' ${API} ${WS} ${S3}`,
     `frame-ancestors 'none'`,
     `base-uri 'self'`,
     `form-action 'self'`,
