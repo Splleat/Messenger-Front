@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/lib/config';
 import { useState } from 'react';
 import { PresignRequest } from '@/types/common';
 import {authenticatedFetch} from "@/lib/api-auth";
@@ -18,7 +19,7 @@ export function useStorageUpload(session: Session) {
         try {
             const response = await authenticatedFetch(
                 session,
-                'http://localhost:8080/attachments/presign',
+                `${API_BASE_URL}/attachments/presign`,
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },

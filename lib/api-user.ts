@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/lib/config';
 import { Session } from 'next-auth';
 import { authenticatedFetch } from '@/lib/api-auth';
 import { MyProfileResponse, ProfileResponse } from '@/types/common';
@@ -5,7 +6,7 @@ import { MyProfileResponse, ProfileResponse } from '@/types/common';
 export async function fetchMyProfile(session: Session) {
     const response = await authenticatedFetch(
         session,
-        `http://localhost:8080/profiles/me`,
+        `${API_BASE_URL}/profiles/me`,
     );
 
     if (!response.ok) {
@@ -20,7 +21,7 @@ export async function fetchMyProfile(session: Session) {
 export async function fetchTargetProfile(session: Session, targetId: string) {
     const response = await authenticatedFetch(
         session,
-        `http://localhost:8080/profiles/${targetId}`,
+        `${API_BASE_URL}/profiles/${targetId}`,
     );
 
     if (!response.ok) {
@@ -38,7 +39,7 @@ export async function uploadProfileImage(
 ) {
     const response = await authenticatedFetch(
         session,
-        `http://localhost:8080/profiles`,
+        `${API_BASE_URL}/profiles`,
         {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },

@@ -1,4 +1,5 @@
 'use server';
+import { API_BASE_URL } from '@/lib/config';
 
 import { auth } from '@/auth';
 import {
@@ -23,7 +24,7 @@ export async function SpaceCreateAction(data: FormData): Promise<FormState> {
 
     const response = await authenticatedFetch(
         session,
-        'http://localhost:8080/spaces',
+        `${API_BASE_URL}/spaces`,
         {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

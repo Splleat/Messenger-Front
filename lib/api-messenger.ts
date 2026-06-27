@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/lib/config';
 import {
     ChannelListResponse,
     ChannelMessagePage,
@@ -14,7 +15,7 @@ import { authenticatedFetch } from '@/lib/api-auth';
 export async function fetchChannelList(session: Session) {
     const response = await authenticatedFetch(
         session,
-        'http://localhost:8080/channels',
+        `${API_BASE_URL}/channels`,
     );
 
     if (!response.ok) {
@@ -29,7 +30,7 @@ export async function fetchChannelList(session: Session) {
 export async function fetchSpaceList(session: Session) {
     const response = await authenticatedFetch(
         session,
-        'http://localhost:8080/spaces',
+        `${API_BASE_URL}/spaces`,
     );
 
     if (!response.ok) {
@@ -47,7 +48,7 @@ export async function fetchChannelParticipants(
 ) {
     const response = await authenticatedFetch(
         session,
-        `http://localhost:8080/channels/${channelId}/participants`,
+        `${API_BASE_URL}/channels/${channelId}/participants`,
     );
 
     if (!response.ok) {
@@ -65,7 +66,7 @@ export async function fetchDirectChannelMessageList(
 ) {
     const response = await authenticatedFetch(
         session,
-        `http://localhost:8080/channels/${channelId}/messages`,
+        `${API_BASE_URL}/channels/${channelId}/messages`,
     );
 
     if (!response.ok) {
@@ -126,7 +127,7 @@ export async function fetchCursorPrevMessage(
 ): Promise<MessagePageResponse> {
     const response = await authenticatedFetch(
         session,
-        `http://localhost:8080/channels/${channelId}/messages?cursorId=${cursorId}&direction=prev`,
+        `${API_BASE_URL}/channels/${channelId}/messages?cursorId=${cursorId}&direction=prev`,
     );
 
     if (!response.ok) {
@@ -143,7 +144,7 @@ export async function fetchCursorNextMessage(
 ): Promise<MessagePageResponse> {
     const response = await authenticatedFetch(
         session,
-        `http://localhost:8080/channels/${channelId}/messages?cursorId=${cursorId}&direction=next`,
+        `${API_BASE_URL}/channels/${channelId}/messages?cursorId=${cursorId}&direction=next`,
     );
 
     if (!response.ok) {
@@ -160,8 +161,8 @@ export async function fetchChannelEnterMessages(
     spaceId?: string,
 ): Promise<ChannelMessagePage> {
     const url = spaceId
-        ? `http://localhost:8080/spaces/${spaceId}/channels/${channelId}`
-        : `http://localhost:8080/channels/${channelId}`;
+        ? `${API_BASE_URL}/spaces/${spaceId}/channels/${channelId}`
+        : `${API_BASE_URL}/channels/${channelId}`;
 
     const response = await authenticatedFetch(session, url);
 
@@ -175,7 +176,7 @@ export async function fetchChannelEnterMessages(
 export async function fetchSpace(session: Session, spaceId: string) {
     const response = await authenticatedFetch(
         session,
-        `http://localhost:8080/spaces/${spaceId}`,
+        `${API_BASE_URL}/spaces/${spaceId}`,
     );
 
     if (!response.ok) {
@@ -194,7 +195,7 @@ export async function updateChannelLastRead(
 ) {
     await authenticatedFetch(
         session,
-        `http://localhost:8080/channels/${channelId}/read`,
+        `${API_BASE_URL}/channels/${channelId}/read`,
         { method: 'PATCH', body: JSON.stringify({ lastReadMessageId }) },
     );
 }

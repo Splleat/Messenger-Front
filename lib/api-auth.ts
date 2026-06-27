@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/lib/config';
 import {
     LoginRequest,
     LoginResponse,
@@ -61,7 +62,7 @@ export async function fetchLogin(
         return createValidationError('입력값이 올바르지 않습니다.');
     }
 
-    const response = await fetch('http://localhost:8080/auth/login', {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials),
@@ -85,7 +86,7 @@ export async function tokenReissue(
         return createAuthError('인증 정보가 존재하지 않습니다.');
     }
 
-    const response = await fetch('http://localhost:8080/auth/refresh', {
+    const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

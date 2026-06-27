@@ -1,4 +1,5 @@
 'use server'
+import { API_BASE_URL } from '@/lib/config';
 
 import { authenticatedFetch } from '@/lib/api-auth';
 import { Session } from 'next-auth';
@@ -7,7 +8,7 @@ import { ActionResponse, ApiErrorResponse } from '@/types/common';
 export async function ChannelLeaveAction(session: Session, channelId: string): Promise<ActionResponse> {
     const response = await authenticatedFetch(
         session,
-        `http://localhost:8080/channels/${channelId}`, {
+        `${API_BASE_URL}/channels/${channelId}`, {
             method: 'DELETE'
         },
     );

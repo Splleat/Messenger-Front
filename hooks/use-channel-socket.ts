@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/lib/config';
 import {
     MessageCreatedData,
     MessageEvent,
@@ -25,7 +26,7 @@ export function useChannelSocket({
     useEffect(() => {
         const client = new Client({
             webSocketFactory: () =>
-                new SockJS('http://localhost:8080/ws-stomp'),
+                new SockJS(`${API_BASE_URL}/ws-stomp`),
             connectHeaders: {
                 Authorization: `Bearer ${accessToken}`,
             },

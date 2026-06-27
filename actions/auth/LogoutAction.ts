@@ -1,4 +1,5 @@
 'use server';
+import { API_BASE_URL } from '@/lib/config';
 
 import { auth, signOut } from '@/auth';
 import { LogoutRequest } from '@/types/auth';
@@ -35,7 +36,7 @@ export async function LogoutAction(): Promise<FormState> {
 
     const response = await authenticatedFetch(
         session,
-        'http://localhost:8080/auth/logout',
+        `${API_BASE_URL}/auth/logout`,
         {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

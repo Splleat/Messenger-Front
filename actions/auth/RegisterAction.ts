@@ -1,4 +1,5 @@
 'use server';
+import { API_BASE_URL } from '@/lib/config';
 
 import { ApiErrorResponse, FormState } from '@/types/common';
 import { redirect } from 'next/navigation';
@@ -17,7 +18,7 @@ export async function RegisterAction(
 
     const request: RegisterRequest = validation.data;
 
-    const response = await fetch('http://localhost:8080/auth/register', {
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(request),

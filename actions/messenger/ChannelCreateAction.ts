@@ -1,4 +1,5 @@
 'use server';
+import { API_BASE_URL } from '@/lib/config';
 
 import {
     ApiErrorResponse,
@@ -23,8 +24,8 @@ export async function ChannelCreateAction(
     }
 
     const url = spaceId
-        ? `http://localhost:8080/spaces/${spaceId}/channels`
-        : 'http://localhost:8080/channels';
+        ? `${API_BASE_URL}/spaces/${spaceId}/channels`
+        : `${API_BASE_URL}/channels`;
 
     const request: ChannelCreateRequest = {
         channelName: validation.data.channelName,

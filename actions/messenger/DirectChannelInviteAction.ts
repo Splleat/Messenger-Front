@@ -1,4 +1,5 @@
 'use server';
+import { API_BASE_URL } from '@/lib/config';
 
 import {
     ApiErrorResponse,
@@ -28,7 +29,7 @@ export async function DirectChannelInviteAction(
 
     const response = await authenticatedFetch(
         session,
-        `http://localhost:8080/channels/${channelId}/members`,
+        `${API_BASE_URL}/channels/${channelId}/members`,
         {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
