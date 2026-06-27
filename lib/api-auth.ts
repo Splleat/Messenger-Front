@@ -27,8 +27,6 @@ export async function authenticatedFetch(
     url: string,
     options: RequestInit = {},
 ) {
-    console.log('[Request URL]: ', url);
-
     const headers = new Headers(options.headers);
 
     if (!session?.accessToken) {
