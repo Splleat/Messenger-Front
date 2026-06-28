@@ -1,6 +1,8 @@
 # Messenger Front
 
-실시간 메신저 서비스의 프론트엔드. [Messenger-Project](https://github.com/Splleat/Messenger-Project)와 연동되며, STOMP 기반 실시간 메시지 송수신과 커서 기반 무한 스크롤을 제공한다.
+실시간 메신저 서비스의 프론트엔드. [Messenger-Project](https://github.com/Splleat/Messenger-Project)와 연동되며, STOMP 기반 실시간 메시지 송수신과 커서 기반 무한 스크롤을 제공합니다.
+
+🔗 **데모: [www.splleat.com](https://www.splleat.com)**
 
 ---
 
@@ -65,48 +67,3 @@
 ```
 
 ---
-
-## 실행 방법
-
-### 사전 요구사항
-
-- Node.js 20 이상
-- [메신저 백엔드](https://github.com/Splleat/Messenger-Project)가 `localhost:8080`에서 실행 중
-
-### 1. 의존성 설치
-
-```bash
-npm install
-```
-
-### 2. 환경 변수 설정
-
-`.env.example`을 복사해 `.env`를 만들고 값을 채운다.
-
-```bash
-cp .env.example .env
-```
-
-| 변수 | 설명 | 예시 |
-| --- | --- | --- |
-| `NEXTAUTH_URL` | 애플리케이션 URL | `http://localhost:3000` |
-| `NEXTAUTH_SECRET` | NextAuth 세션 암호화 키 | `openssl rand -base64 32` 결과값 |
-
-### 3. 실행
-
-```bash
-npm run dev
-```
-
-`http://localhost:3000` 에서 접속할 수 있다.
-
----
-
-## 스크립트
-
-| 명령 | 설명 |
-| --- | --- |
-| `npm run dev` | 개발 서버 실행 |
-| `npm run build` | 프로덕션 빌드 |
-| `npm run start` | 빌드 결과 실행 |
-| `npm run lint` | ESLint 검사 |
