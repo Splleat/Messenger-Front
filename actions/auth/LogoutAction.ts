@@ -23,6 +23,7 @@ export async function LogoutAction(): Promise<FormState> {
     const jwt = await getToken({
         req: req,
         secret: process.env.NEXTAUTH_SECRET,
+        secureCookie: process.env.NEXTAUTH_URL?.startsWith('https'),
     });
 
     if (!jwt?.accessToken || !jwt?.refreshToken) {
