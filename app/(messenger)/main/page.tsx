@@ -75,6 +75,7 @@ export default async function MessengerMainPage({
                     session={session}
                     channelList={channelList}
                     space={selectedSpace}
+                    myProfile={myProfile}
                 />
 
                 <main className="flex flex-col flex-1 min-w-0 bg-background">
