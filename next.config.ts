@@ -5,13 +5,17 @@ const API = 'https://api.splleat.com';
 const WS = 'wss://api.splleat.com';
 const S3 = 'https://splleat-messenger-attachments.s3.ap-northeast-2.amazonaws.com';
 
+const isDev = process.env.NODE_ENV === 'development';
+const LOCAL_API = 'http://localhost:8080';
+const LOCAL_WS = 'ws://localhost:8080';
+
 const csp = [
     `default-src 'self'`,
     `script-src 'self' 'unsafe-inline' 'unsafe-eval'`,
     `style-src 'self' 'unsafe-inline'`,
     `img-src 'self' data: blob: ${S3}`,
     `font-src 'self' data:`,
-    `connect-src 'self' ${API} ${WS} ${S3}`,
+    `connect-src 'self' ${API} ${WS} ${S3}${isDev ? ` ${LOCAL_API} ${LOCAL_WS}` : ''}`,
     `frame-ancestors 'none'`,
     `base-uri 'self'`,
     `form-action 'self'`,
