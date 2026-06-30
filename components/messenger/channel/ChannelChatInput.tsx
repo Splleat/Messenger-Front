@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import React, { useActionState, useRef, useState } from 'react';
 import { FormState } from '@/types/common';
-import { Paperclip, SendHorizontal } from 'lucide-react';
+import { Paperclip, SendHorizontal, X } from 'lucide-react';
 
 export function ChannelChatInput({
     placeHolder,
@@ -51,10 +51,11 @@ export function ChannelChatInput({
             {selectedFile && (
                 <div className="mb-2 px-2 py-1 text-xs bg-muted rounded-md flex items-center justify-between">
                     <span className="truncate">{selectedFile.name}</span>
-                    <button 
+                    <button
                         onClick={() => setSelectedFile(null)}
                         className="text-muted-foreground hover:text-foreground"
                     >
+                        <X className="w-3 h-3" />
                     </button>
                 </div>
             )}
