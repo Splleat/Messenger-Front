@@ -116,7 +116,7 @@ export async function fetchMessages(
             };
         }
         default:
-            throw new Error('처리?��? ?��? 케?�스');
+            throw new Error('처리?��? ?��? 케?�스');
     }
 }
 
@@ -131,7 +131,7 @@ export async function fetchCursorPrevMessage(
     );
 
     if (!response.ok) {
-        // TODO: fallback
+        return { messages: [], hasMore: false, cursorId };
     }
 
     return await response.json();
@@ -148,13 +148,13 @@ export async function fetchCursorNextMessage(
     );
 
     if (!response.ok) {
-        // TODO: fallback
+        return { messages: [], hasMore: false, cursorId };
     }
 
     return await response.json();
 }
 
-// 채널 ?�장
+// 채널 진입
 export async function fetchChannelEnterMessages(
     session: Session,
     channelId: string,
@@ -167,7 +167,7 @@ export async function fetchChannelEnterMessages(
     const response = await authenticatedFetch(session, url);
 
     if (!response.ok) {
-        // TODO: fallback
+        return { messages: [], hasPrev: false, prevCursorId: undefined, hasNext: false, nextCursorId: undefined };
     }
 
     return await response.json();
