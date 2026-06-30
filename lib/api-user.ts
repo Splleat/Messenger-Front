@@ -1,6 +1,6 @@
 import { API_BASE_URL } from '@/lib/config';
 import { Session } from 'next-auth';
-import { authenticatedFetch } from '@/lib/api-auth';
+import { authenticatedFetch } from '@/lib/http';
 import { MyProfileResponse, ProfileResponse } from '@/types/profile';
 
 export async function fetchMyProfile(session: Session) {
@@ -48,7 +48,7 @@ export async function uploadProfileImage(
     );
 
     if (!response.ok) {
-        return { error: '프로필 이미지 업로드 실패' };
+        return { error: '?�로???��?지 ?�로???�패' };
     }
 
     return { error: null };

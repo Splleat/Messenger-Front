@@ -2,7 +2,7 @@
 import { API_BASE_URL } from '@/lib/config';
 
 import { Session } from 'next-auth';
-import { authenticatedFetch } from '@/lib/api-auth';
+import { authenticatedFetch } from '@/lib/http';
 import { ApiErrorResponse, FormState } from '@/types/common';
 
 export async function SpaceLeaveAction(

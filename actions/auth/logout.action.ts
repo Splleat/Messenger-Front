@@ -4,7 +4,7 @@ import { API_BASE_URL } from '@/lib/config';
 import { auth, signOut } from '@/auth';
 import { LogoutRequest } from '@/types/auth';
 import { ApiErrorResponse, FormState } from '@/types/common';
-import { authenticatedFetch } from '@/lib/api-auth';
+import { authenticatedFetch } from '@/lib/http';
 import { getToken } from '@auth/core/jwt';
 import { headers } from 'next/dist/server/request/headers';
 import { cookies } from 'next/dist/server/request/cookies';
@@ -27,7 +27,7 @@ export async function LogoutAction(): Promise<FormState> {
     });
 
     if (!jwt?.accessToken || !jwt?.refreshToken) {
-        return { error: '인증 정보가 존재하지 않습니다.' };
+        return { error: '?�증 ?�보가 존재?��? ?�습?�다.' };
     }
 
     const request: LogoutRequest = {

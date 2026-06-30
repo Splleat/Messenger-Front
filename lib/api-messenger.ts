@@ -10,7 +10,7 @@ import {
     SpaceResponse,
 } from '@/types/messenger';
 import { Session } from 'next-auth';
-import { authenticatedFetch } from '@/lib/api-auth';
+import { authenticatedFetch } from '@/lib/http';
 
 export async function fetchChannelList(session: Session) {
     const response = await authenticatedFetch(
@@ -116,7 +116,7 @@ export async function fetchMessages(
             };
         }
         default:
-            throw new Error('처리되지 않은 케이스');
+            throw new Error('처리?��? ?��? 케?�스');
     }
 }
 
@@ -154,7 +154,7 @@ export async function fetchCursorNextMessage(
     return await response.json();
 }
 
-// 채널 입장
+// 채널 ?�장
 export async function fetchChannelEnterMessages(
     session: Session,
     channelId: string,

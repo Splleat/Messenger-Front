@@ -1,55 +1,8 @@
 import { API_BASE_URL } from '@/lib/config';
-import {
-    LoginRequest,
-    LoginResponse,
-    TokenReissueResponse,
-} from '@/types/auth';
-import {
-    ActionResponse,
-    ApiErrorResponse,
-    createAuthError,
-    createValidationError,
-} from '@/types/common';
+import { LoginRequest, LoginResponse, TokenReissueResponse } from '@/types/auth';
+import { ActionResponse, ApiErrorResponse, createAuthError, createValidationError } from '@/types/common';
 import { JWT } from '@auth/core/jwt';
-import { Session } from 'next-auth';
 import { loginSchema } from '@/schema/auth';
-import { signOut } from '@/auth';
-
-export class AuthenticationError extends Error {
-    constructor(message = '인증이 만료되었습니다. 다시 로그인해주세요.') {
-        super(message);
-        this.name = 'AuthenticationError';
-    }
-}
-
-export async function authenticatedFetch(
-    session: Session | null,
-    url: string,
-    options: RequestInit = {},
-) {
-    const headers = new Headers(options.headers);
-
-    if (!session?.accessToken) {
-        throw new AuthenticationError('인증 정보가 존재하지 않습니다.');
-    }
-
-    if (!headers.has('Authorization')) {
-        headers.set('Authorization', `Bearer ${session.accessToken}`);
-    }
-
-    if (!headers.has('Content-Type') && options.body) {
-        headers.set('Content-Type', 'application/json');
-    }
-
-    const response = await fetch(url, { ...options, headers });
-
-    if (response.status === 401) {
-        await signOut({redirectTo: '/auth/login'});
-        throw new AuthenticationError('인증이 만료되었습니다.');
-    }
-
-    return response;
-}
 
 export async function fetchLogin(
     credentials: LoginRequest,
@@ -87,19 +40,14 @@ export async function tokenReissue(
     const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            accessToken: accessToken,
-            refreshToken: refreshToken,
-        }),
+        body: JSON.stringify({ accessToken, refreshToken }),
     });
 
     if (response.ok) {
         const data: TokenReissueResponse = await response.json();
-
-        return { success: true, data: data };
+        return { success: true, data };
     }
 
     const error: ApiErrorResponse = await response.json();
-
-    return { success: false, error: error };
+    return { success: false, error };
 }

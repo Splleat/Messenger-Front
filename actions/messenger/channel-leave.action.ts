@@ -1,7 +1,7 @@
 'use server'
 import { API_BASE_URL } from '@/lib/config';
 
-import { authenticatedFetch } from '@/lib/api-auth';
+import { authenticatedFetch } from '@/lib/http';
 import { Session } from 'next-auth';
 import { ActionResponse, ApiErrorResponse } from '@/types/common';
 

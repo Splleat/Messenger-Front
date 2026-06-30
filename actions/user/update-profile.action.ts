@@ -1,6 +1,6 @@
 import { API_BASE_URL } from '@/lib/config';
 import { Session } from 'next-auth';
-import { authenticatedFetch } from '@/lib/api-auth';
+import { authenticatedFetch } from '@/lib/http';
 import { ApiErrorResponse } from '@/types/common';
 
 export async function updateProfileAction(session: Session, formData: FormData) {

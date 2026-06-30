@@ -4,7 +4,7 @@ import { API_BASE_URL } from '@/lib/config';
 import { auth } from '@/auth';
 import { ApiErrorResponse, FormState } from '@/types/common';
 import { SpaceCreateRequest } from '@/types/messenger';
-import { authenticatedFetch } from '@/lib/api-auth';
+import { authenticatedFetch } from '@/lib/http';
 import { validateFormData } from '@/lib/form-validator';
 import { spaceCreateSchema } from '@/schema/messenger';
 
