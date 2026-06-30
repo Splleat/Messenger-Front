@@ -8,7 +8,7 @@ import {
     MessageResponse,
     SpaceListResponse,
     SpaceResponse,
-} from '@/types/common';
+} from '@/types/messenger';
 import { Session } from 'next-auth';
 import { authenticatedFetch } from '@/lib/api-auth';
 

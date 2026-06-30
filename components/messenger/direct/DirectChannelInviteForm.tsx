@@ -15,7 +15,8 @@ import { Button } from '@/components/ui/button';
 import * as React from 'react';
 import { useActionState, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { FormState, UserSearchResult } from '@/types/common';
+import { FormState } from '@/types/common';
+import { UserSearchResult } from '@/types/profile';
 import { UserSearchInput } from '@/components/user/UserSearchInput';
 import { FieldError } from '@/components/ui/field';
 

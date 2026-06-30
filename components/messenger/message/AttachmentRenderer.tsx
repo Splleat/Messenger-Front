@@ -1,4 +1,4 @@
-import { AttachmentResponse } from '@/types/common';
+import { AttachmentResponse } from '@/types/messenger';
 import { Card, CardContent } from '@/components/ui/card';
 import { DownloadIcon, FileIcon } from 'lucide-react';
 import { downloadFile } from '@/lib/download';

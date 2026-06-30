@@ -14,7 +14,8 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { FormState, UserSearchResult } from '@/types/common';
+import { FormState } from '@/types/common';
+import { UserSearchResult } from '@/types/profile';
 import { UserSearchInput } from '@/components/user/UserSearchInput';
 import { FieldError } from '@/components/ui/field';
 

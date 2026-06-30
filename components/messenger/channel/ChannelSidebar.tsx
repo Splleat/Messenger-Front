@@ -7,11 +7,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Session } from 'next-auth';
 import { ChannelCreateDialog } from '@/components/messenger/channel/ChannelCreateDialog';
 import Link from 'next/link';
-import {
-    ChannelListResponse,
-    MyProfileResponse,
-    SpaceResponse,
-} from '@/types/common';
+import { ChannelListResponse, SpaceResponse } from '@/types/messenger';
+import { MyProfileResponse } from '@/types/profile';
 import { ProfileEditModal } from '@/components/user/ProfileEditModal';
 import { fetchMyProfile } from '@/lib/api-user';
 import {

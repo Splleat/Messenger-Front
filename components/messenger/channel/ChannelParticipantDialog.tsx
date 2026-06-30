@@ -1,4 +1,4 @@
-import { ChannelParticipantResponse } from '@/types/common';
+import { ChannelParticipantResponse } from '@/types/messenger';
 import {
     Dialog,
     DialogContent,

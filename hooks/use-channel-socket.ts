@@ -4,7 +4,7 @@ import {
     MessageEvent,
     MessageRequest,
     MessageResponse,
-} from '@/types/common';
+} from '@/types/messenger';
 import { useCallback, useEffect, useRef } from 'react';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';

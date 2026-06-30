@@ -3,7 +3,7 @@ import {
     ChannelListResponse,
     ChannelParticipantResponse,
     SpaceResponse,
-} from '@/types/common';
+} from '@/types/messenger';
 import * as React from 'react';
 import { DirectChannelInviteForm } from '@/components/messenger/direct/DirectChannelInviteForm';
 import { ChannelParticipantDialog } from '@/components/messenger/channel/ChannelParticipantDialog';

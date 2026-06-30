@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { searchProfiles } from '@/actions/user/search-profiles.action';
-import { UserSearchResult } from '@/types/common';
+import { UserSearchResult } from '@/types/profile';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Popover, PopoverAnchor, PopoverContent } from '@/components/ui/popover';

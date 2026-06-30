@@ -3,7 +3,8 @@
 import { Session } from 'next-auth';
 import React, { useActionState, useEffect, useRef, useState } from 'react';
 import { updateProfileAction } from '@/actions/user/update-profile.action';
-import { FormState, MyProfileResponse } from '@/types/common';
+import { FormState } from '@/types/common';
+import { MyProfileResponse } from '@/types/profile';
 import { useStorageUpload } from '@/hooks/use-storage-upload';
 import { fetchMyProfile, uploadProfileImage } from '@/lib/api-user';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

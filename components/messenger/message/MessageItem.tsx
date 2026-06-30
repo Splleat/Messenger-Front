@@ -1,5 +1,5 @@
 ﻿import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { MessageResponse } from '@/types/common';
+import { MessageResponse } from '@/types/messenger';
 import React from 'react';
 import { useMounted } from '@/hooks/use-mounted';
 import { AttachmentRenderer } from '@/components/messenger/message/AttachmentRenderer';

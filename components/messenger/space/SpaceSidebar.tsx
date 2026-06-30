@@ -3,7 +3,7 @@ import { Separator } from '@/components/ui/separator';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { SpaceIcon } from '@/components/messenger/space/SpaceIcon';
 import { SpaceCreateForm } from '@/components/messenger/space/SpaceCreateForm';
-import { SpaceListResponse } from '@/types/common';
+import { SpaceListResponse } from '@/types/messenger';
 
 export async function SpaceSidebar({
     spaceList,

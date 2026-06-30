@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { MessageResponse } from '@/types/common';
+import { MessageResponse } from '@/types/messenger';
 import { MessageItem } from '@/components/messenger/message/MessageItem';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { useRef, useState } from 'react';

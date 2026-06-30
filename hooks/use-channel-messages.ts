@@ -4,7 +4,7 @@ import {
     ChannelMessagePage,
     MessagePageParam,
     MessageResponse,
-} from '@/types/common';
+} from '@/types/messenger';
 import {
     InfiniteData,
     useInfiniteQuery,

@@ -2,7 +2,7 @@
 
 import { Session } from 'next-auth';
 import { ProfileEditForm } from '@/components/user/ProfileEditForm';
-import { MyProfileResponse } from '@/types/common';
+import { MyProfileResponse } from '@/types/profile';
 import {
     Dialog,
     DialogContent,

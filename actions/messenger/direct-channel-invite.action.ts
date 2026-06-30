@@ -1,11 +1,8 @@
 'use server';
 import { API_BASE_URL } from '@/lib/config';
 
-import {
-    ApiErrorResponse,
-    DirectChannelInviteRequest,
-    FormState,
-} from '@/types/common';
+import { ApiErrorResponse, FormState } from '@/types/common';
+import { DirectChannelInviteRequest } from '@/types/messenger';
 import { authenticatedFetch } from '@/lib/api-auth';
 import { auth } from '@/auth';
 import { validateFormData } from '@/lib/form-validator';
