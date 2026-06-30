@@ -1,7 +1,7 @@
 import { API_BASE_URL } from '@/lib/config';
 import { useState } from 'react';
 import { PresignRequest } from '@/types/messenger';
-import {authenticatedFetch} from "@/lib/api-auth";
+import { authenticatedFetch } from '@/lib/http';
 import {Session} from "next-auth";
 
 export function useStorageUpload(session: Session) {

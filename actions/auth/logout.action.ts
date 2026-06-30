@@ -27,7 +27,7 @@ export async function LogoutAction(): Promise<FormState> {
     });
 
     if (!jwt?.accessToken || !jwt?.refreshToken) {
-        return { error: '?�증 ?�보가 존재?��? ?�습?�다.' };
+        return { error: '인증 정보가 존재하지 않습니다.' };
     }
 
     const request: LogoutRequest = {

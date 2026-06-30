@@ -12,6 +12,7 @@ import {
     fetchSpace,
     fetchSpaceList,
 } from '@/lib/api-messenger';
+import { fetchMyProfile } from '@/lib/api-user';
 
 export default async function MessengerMainPage({
     searchParams,
@@ -28,9 +29,10 @@ export default async function MessengerMainPage({
     const selectedSpaceId = params.spaceId;
     const selectedChannelId = params.channelId;
 
-    const [spaceList, selectedSpace] = await Promise.all([
+    const [spaceList, selectedSpace, myProfile] = await Promise.all([
         fetchSpaceList(session),
-        selectedSpaceId ? fetchSpace(session, selectedSpaceId) : Promise.resolve(undefined)
+        selectedSpaceId ? fetchSpace(session, selectedSpaceId) : Promise.resolve(undefined),
+        fetchMyProfile(session),
     ]);
 
     const channelList = selectedSpace
@@ -50,6 +52,7 @@ export default async function MessengerMainPage({
                         session={session}
                         channelList={channelList}
                         space={selectedSpace}
+                        myProfile={myProfile}
                     />
                     <main className="flex flex-col flex-1 min-w-0 bg-background items-center justify-center text-muted-foreground">
                         채널을 선택해주세요.

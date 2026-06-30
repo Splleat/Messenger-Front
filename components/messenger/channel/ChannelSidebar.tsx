@@ -1,7 +1,7 @@
 ﻿'use client';
 
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ChevronDown, Hash, LogOut, Plus } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Session } from 'next-auth';
@@ -10,7 +10,6 @@ import Link from 'next/link';
 import { ChannelListResponse, SpaceResponse } from '@/types/messenger';
 import { MyProfileResponse } from '@/types/profile';
 import { ProfileEditModal } from '@/components/user/ProfileEditModal';
-import { fetchMyProfile } from '@/lib/api-user';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -39,18 +38,16 @@ export function ChannelSidebar({
     session,
     space,
     channelList,
+    myProfile: initialProfile,
 }: Readonly<{
     session: Session;
     space?: SpaceResponse;
     channelList: ChannelListResponse[];
+    myProfile: MyProfileResponse | null;
 }>) {
     const title = space ? space.spaceName : '개인 채널';
     const [profileOpen, setProfileOpen] = useState(false);
-    const [myProfile, setMyProfile] = useState<MyProfileResponse | null>(null);
-
-    useEffect(() => {
-        fetchMyProfile(session).then(setMyProfile);
-    }, [session]);
+    const [myProfile, setMyProfile] = useState<MyProfileResponse | null>(initialProfile);
 
     return (
         <Sidebar
