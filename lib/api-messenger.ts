@@ -5,7 +5,6 @@ import {
     ChannelParticipantResponse,
     MessagePageParam,
     MessagePageResponse,
-    MessageResponse,
     SpaceListResponse,
     SpaceResponse,
 } from '@/types/messenger';
@@ -60,23 +59,6 @@ export async function fetchChannelParticipants(
     return data;
 }
 
-export async function fetchDirectChannelMessageList(
-    session: Session,
-    channelId: string,
-) {
-    const response = await authenticatedFetch(
-        session,
-        `${API_BASE_URL}/channels/${channelId}/messages`,
-    );
-
-    if (!response.ok) {
-        return [];
-    }
-
-    const data: MessageResponse[] = await response.json();
-
-    return data;
-}
 
 export async function fetchMessages(
     session: Session,
@@ -116,7 +98,7 @@ export async function fetchMessages(
             };
         }
         default:
-            throw new Error('처리?��? ?��? 케?�스');
+            throw new Error('처리할 수 없는 방향값');
     }
 }
 
