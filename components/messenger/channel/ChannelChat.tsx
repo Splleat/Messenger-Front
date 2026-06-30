@@ -43,7 +43,7 @@ export function ChannelChat({
         onReconnect: syncFrom,
     });
 
-    const { uploadFile, isUploading } = useStorageUpload(session);
+    const { uploadFile } = useStorageUpload(session);
 
     async function handleSubmit(text: string, file?: File) {
         if (!file && !text.trim()) {
