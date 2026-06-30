@@ -22,6 +22,11 @@ export function useChannelSocket({
 }) {
     const clientRef = useRef<Client | null>(null);
     const hasConnectedRef = useRef<boolean>(false);
+    const onMessageRef = useRef(onMessage);
+    const onReconnectRef = useRef(onReconnect);
+
+    useEffect(() => { onMessageRef.current = onMessage; }, [onMessage]);
+    useEffect(() => { onReconnectRef.current = onReconnect; }, [onReconnect]);
 
     useEffect(() => {
         const client = new Client({
@@ -40,7 +45,7 @@ export function useChannelSocket({
 
                         switch (payload.type) {
                             case 'CREATED':
-                                onMessage(
+                                onMessageRef.current(
                                     (payload.data as MessageCreatedData).message,
                                 );
                                 break;
@@ -56,7 +61,7 @@ export function useChannelSocket({
                     },
                 );
                 if (hasConnectedRef.current) {
-                    onReconnect();
+                    onReconnectRef.current();
                 }
                 hasConnectedRef.current = true;
             },
@@ -68,7 +73,7 @@ export function useChannelSocket({
         return () => {
             clientRef.current?.deactivate();
         };
-    }, [channelId, accessToken, onMessage, onReconnect]);
+    }, [channelId, accessToken]);
 
     const sendMessage = useCallback((request: MessageRequest) => {
         const client = clientRef.current;
