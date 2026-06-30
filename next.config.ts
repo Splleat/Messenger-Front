@@ -8,14 +8,15 @@ const S3 = 'https://splleat-messenger-attachments.s3.ap-northeast-2.amazonaws.co
 const isDev = process.env.NODE_ENV === 'development';
 const LOCAL_API = 'http://localhost:8080';
 const LOCAL_WS = 'ws://localhost:8080';
+const LOCAL_MINIO = 'http://localhost:9000';
 
 const csp = [
     `default-src 'self'`,
     `script-src 'self' 'unsafe-inline' 'unsafe-eval'`,
     `style-src 'self' 'unsafe-inline'`,
-    `img-src 'self' data: blob: ${S3}`,
+    `img-src 'self' data: blob: ${S3}${isDev ? ` ${LOCAL_MINIO}` : ''}`,
     `font-src 'self' data:`,
-    `connect-src 'self' ${API} ${WS} ${S3}${isDev ? ` ${LOCAL_API} ${LOCAL_WS}` : ''}`,
+    `connect-src 'self' ${API} ${WS} ${S3}${isDev ? ` ${LOCAL_API} ${LOCAL_WS} ${LOCAL_MINIO}` : ''}`,
     `frame-ancestors 'none'`,
     `base-uri 'self'`,
     `form-action 'self'`,
