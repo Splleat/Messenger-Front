@@ -151,6 +151,13 @@ export interface ProfileResponse {
     statusMessage?: string;
 }
 
+export interface UserSearchResult {
+    userId: string;
+    name: string;
+    imageUrl?: string;
+    statusMessage?: string;
+}
+
 export type MessagePageParam =
     | { direction: 'initial'; cursor: string | null }
     | { direction: 'up'; cursor: string }

@@ -13,32 +13,29 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Field, FieldError, FieldGroup } from '@/components/ui/field';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { FormState } from '@/types/common';
-import { validateFormData } from '@/lib/form-validator';
-import { inviteSchema } from '@/schema/messenger';
+import { FormState, UserSearchResult } from '@/types/common';
+import { UserSearchInput } from '@/components/user/UserSearchInput';
+import { FieldError } from '@/components/ui/field';
 
 export function SpaceInviteDialog({
     spaceId,
     trigger,
 }: Readonly<{ spaceId: string; trigger: React.ReactNode }>) {
     const [open, setOpen] = useState(false);
+    const [selected, setSelected] = useState<UserSearchResult | null>(null);
     const router = useRouter();
+
     const [state, action, isPending] = useActionState(
         async (_prev: FormState, data: FormData) => {
-            const parsed = validateFormData(inviteSchema, data);
+            if (!selected) return { error: '초대할 사용자를 선택해주세요.' };
 
-            if (!parsed.success) {
-                return parsed.state;
-            }
-
+            data.set('targetId', selected.userId);
             const response = await SpaceInviteAction(data, spaceId);
 
             if (!response.error) {
                 setOpen(false);
+                setSelected(null);
                 router.refresh();
             }
 
@@ -55,20 +52,13 @@ export function SpaceInviteDialog({
                     <DialogTitle>그룹 초대</DialogTitle>
                 </DialogHeader>
                 <form action={action}>
-                    <FieldGroup>
-                        {state.error ? (
-                            <FieldError errors={[{ message: state.error }]} />
-                        ) : null}
-                        <Field>
-                            <Label htmlFor="spaceName">사용자 아이디</Label>
-                            <Input id="targetId" name="targetId" required />
-                        </Field>
-                    </FieldGroup>
-                    <DialogFooter>
+                    {state.error && <FieldError errors={[{ message: state.error }]} />}
+                    <UserSearchInput onSelect={setSelected} selected={selected} />
+                    <DialogFooter className="mt-4">
                         <DialogClose asChild>
                             <Button variant="outline">취소</Button>
                         </DialogClose>
-                        <Button type="submit" disabled={isPending}>
+                        <Button type="submit" disabled={isPending || !selected}>
                             {isPending ? '초대 중...' : '초대하기'}
                         </Button>
                     </DialogFooter>
