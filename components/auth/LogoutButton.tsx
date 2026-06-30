@@ -1,7 +1,7 @@
-'use client';
+﻿'use client';
 
 import { Button } from '@/components/ui/button';
-import { LogoutAction } from '@/actions/auth/LogoutAction';
+import { LogoutAction } from '@/actions/auth/logout.action';
 import { useActionState } from 'react';
 
 export default function LogoutButton() {

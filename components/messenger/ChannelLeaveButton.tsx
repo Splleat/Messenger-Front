@@ -1,6 +1,6 @@
-'use client'
+﻿'use client'
 
-import { ChannelLeaveAction } from '@/actions/messenger/ChannelLeaveAction';
+import { ChannelLeaveAction } from '@/actions/messenger/channel-leave.action';
 import { Session } from 'next-auth';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';

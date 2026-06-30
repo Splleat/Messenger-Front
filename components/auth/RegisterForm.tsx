@@ -1,7 +1,7 @@
-'use client';
+﻿'use client';
 
 import { useActionState } from 'react';
-import { RegisterAction } from '@/actions/auth/RegisterAction';
+import { RegisterAction } from '@/actions/auth/register.action';
 import {
     Card,
     CardContent,

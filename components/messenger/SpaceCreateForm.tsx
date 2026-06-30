@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import {
     Dialog,
@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Field, FieldError, FieldGroup } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { SpaceCreateAction } from '@/actions/messenger/SpaceCreateAction';
+import { SpaceCreateAction } from '@/actions/messenger/space-create.action';
 import { FormState } from '@/types/common';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';

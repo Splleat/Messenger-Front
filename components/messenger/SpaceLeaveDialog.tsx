@@ -1,9 +1,9 @@
-'use client';
+﻿'use client';
 
 import { Session } from 'next-auth';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { SpaceLeaveAction } from '@/actions/messenger/SpaceLeaveAction';
+import { SpaceLeaveAction } from '@/actions/messenger/space-leave.action';
 import {
     Dialog, DialogClose,
     DialogContent,

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import {
     Card,
@@ -18,7 +18,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useActionState } from 'react';
-import { LoginAction } from '@/actions/auth/LoginAction';
+import { LoginAction } from '@/actions/auth/login.action';
 import { FormState } from '@/types/common';
 import { loginSchema } from '@/schema/auth';
 import { validateFormData } from '@/lib/form-validator';

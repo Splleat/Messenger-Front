@@ -1,6 +1,6 @@
-'use client';
+﻿'use client';
 
-import { ChannelCreateAction } from '@/actions/messenger/ChannelCreateAction';
+import { ChannelCreateAction } from '@/actions/messenger/channel-create.action';
 import {
     Dialog,
     DialogClose,

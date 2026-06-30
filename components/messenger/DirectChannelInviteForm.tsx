@@ -1,6 +1,6 @@
-'use client';
+﻿'use client';
 
-import { DirectChannelInviteAction } from '@/actions/messenger/DirectChannelInviteAction';
+import { DirectChannelInviteAction } from '@/actions/messenger/direct-channel-invite.action';
 import {
     Dialog,
     DialogClose,

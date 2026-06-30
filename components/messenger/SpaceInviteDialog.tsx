@@ -1,6 +1,6 @@
-'use client';
+﻿'use client';
 
-import { SpaceInviteAction } from '@/actions/messenger/SpaceInviteAction';
+import { SpaceInviteAction } from '@/actions/messenger/space-invite.action';
 import * as React from 'react';
 import { useActionState, useState } from 'react';
 import { useRouter } from 'next/navigation';
