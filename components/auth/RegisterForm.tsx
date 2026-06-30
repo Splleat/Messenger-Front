@@ -1,7 +1,7 @@
 ﻿'use client';
 
 import { useActionState } from 'react';
-import { RegisterAction } from '@/actions/auth/register.action';
+import { registerAction } from '@/actions/auth/register.action';
 import {
     Card,
     CardContent,
@@ -34,7 +34,7 @@ export default function RegisterForm() {
                 return parsed.state;
             }
 
-            return await RegisterAction(data);
+            return await registerAction(data);
         },
         { error: null },
     );

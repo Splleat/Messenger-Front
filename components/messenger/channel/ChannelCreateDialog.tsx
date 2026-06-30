@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { ChannelCreateAction } from '@/actions/messenger/channel-create.action';
+import { channelCreateAction } from '@/actions/messenger/channel-create.action';
 import {
     Dialog,
     DialogClose,
@@ -36,7 +36,7 @@ export function ChannelCreateDialog({
                 return parsed.state;
             }
 
-            const response = await ChannelCreateAction(data, spaceId);
+            const response = await channelCreateAction(data, spaceId);
 
             if (!response.error) {
                 setOpen(false);

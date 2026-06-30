@@ -9,7 +9,7 @@ import { getToken } from '@auth/core/jwt';
 import { headers } from 'next/dist/server/request/headers';
 import { cookies } from 'next/dist/server/request/cookies';
 
-export async function LogoutAction(): Promise<FormState> {
+export async function logoutAction(): Promise<FormState> {
     const session = await auth();
 
     const reqHeaders = await headers();

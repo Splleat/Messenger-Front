@@ -8,7 +8,7 @@ import { auth } from '@/auth';
 import { validateFormData } from '@/lib/form-validator';
 import { inviteSchema } from '@/schema/messenger';
 
-export async function DirectChannelInviteAction(
+export async function directChannelInviteAction(
     data: FormData,
     channelId: string,
 ): Promise<FormState> {

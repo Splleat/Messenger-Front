@@ -1,6 +1,6 @@
 ﻿'use client'
 
-import { ChannelLeaveAction } from '@/actions/messenger/channel-leave.action';
+import { channelLeaveAction } from '@/actions/messenger/channel-leave.action';
 import { Session } from 'next-auth';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -10,7 +10,7 @@ export function ChannelLeaveButton({ session, channelId }: Readonly<{ session: S
     const router = useRouter();
 
     const onClick = async () => {
-        const result = await ChannelLeaveAction(session, channelId);
+        const result = await channelLeaveAction(session, channelId);
 
         if (result.success) {
             router.push('/main');

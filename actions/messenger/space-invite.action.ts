@@ -8,7 +8,7 @@ import { auth } from '@/auth';
 import { validateFormData } from '@/lib/form-validator';
 import { inviteSchema } from '@/schema/messenger';
 
-export async function SpaceInviteAction(
+export async function spaceInviteAction(
     data: FormData,
     spaceId: string,
 ): Promise<FormState> {

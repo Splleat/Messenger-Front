@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { SpaceInviteAction } from '@/actions/messenger/space-invite.action';
+import { spaceInviteAction } from '@/actions/messenger/space-invite.action';
 import * as React from 'react';
 import { useActionState, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -32,7 +32,7 @@ export function SpaceInviteDialog({
             if (!selected) return { error: '초대할 사용자를 선택해주세요.' };
 
             data.set('targetId', selected.userId);
-            const response = await SpaceInviteAction(data, spaceId);
+            const response = await spaceInviteAction(data, spaceId);
 
             if (!response.error) {
                 setOpen(false);

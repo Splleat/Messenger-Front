@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation';
 import { loginSchema } from '@/schema/auth';
 import { validateFormData } from '@/lib/form-validator';
 
-export async function LoginAction(data: FormData): Promise<FormState> {
+export async function loginAction(data: FormData): Promise<FormState> {
     const validation = validateFormData(loginSchema, data);
 
     if (!validation.success) {

@@ -5,7 +5,7 @@ import { authenticatedFetch } from '@/lib/http';
 import { Session } from 'next-auth';
 import { ActionResponse, ApiErrorResponse } from '@/types/common';
 
-export async function ChannelLeaveAction(session: Session, channelId: string): Promise<ActionResponse> {
+export async function channelLeaveAction(session: Session, channelId: string): Promise<ActionResponse> {
     const response = await authenticatedFetch(
         session,
         `${API_BASE_URL}/channels/${channelId}`, {

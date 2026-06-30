@@ -18,7 +18,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useActionState } from 'react';
-import { LoginAction } from '@/actions/auth/login.action';
+import { loginAction } from '@/actions/auth/login.action';
 import { FormState } from '@/types/common';
 import { loginSchema } from '@/schema/auth';
 import { validateFormData } from '@/lib/form-validator';
@@ -32,7 +32,7 @@ export default function LoginForm() {
             return parsed.state;
         }
 
-        return await LoginAction(data);
+        return await loginAction(data);
     }, { error: null });
 
     return (

@@ -7,7 +7,7 @@ import { registerSchema } from '@/schema/auth';
 import { validateFormData } from '@/lib/form-validator';
 import { RegisterRequest } from '@/types/auth';
 
-export async function RegisterAction(
+export async function registerAction(
     data: FormData,
 ): Promise<FormState> {
     const validation = validateFormData(registerSchema, data);

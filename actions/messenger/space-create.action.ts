@@ -8,7 +8,7 @@ import { authenticatedFetch } from '@/lib/http';
 import { validateFormData } from '@/lib/form-validator';
 import { spaceCreateSchema } from '@/schema/messenger';
 
-export async function SpaceCreateAction(data: FormData): Promise<FormState> {
+export async function spaceCreateAction(data: FormData): Promise<FormState> {
     const session = await auth();
 
     const validation = validateFormData(spaceCreateSchema, data);

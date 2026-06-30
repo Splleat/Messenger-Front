@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { DirectChannelInviteAction } from '@/actions/messenger/direct-channel-invite.action';
+import { directChannelInviteAction } from '@/actions/messenger/direct-channel-invite.action';
 import {
     Dialog,
     DialogClose,
@@ -32,7 +32,7 @@ export function DirectChannelInviteForm({
             if (!selected) return { error: '초대할 사용자를 선택해주세요.' };
 
             data.set('targetId', selected.userId);
-            const response = await DirectChannelInviteAction(data, channelId);
+            const response = await directChannelInviteAction(data, channelId);
 
             if (!response.error) {
                 setOpen(false);

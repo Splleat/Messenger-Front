@@ -3,7 +3,7 @@
 import { Session } from 'next-auth';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { SpaceLeaveAction } from '@/actions/messenger/space-leave.action';
+import { spaceLeaveAction } from '@/actions/messenger/space-leave.action';
 import {
     Dialog, DialogClose,
     DialogContent,
@@ -23,7 +23,7 @@ export function SpaceLeaveDialog({
     const [open, setOpen] = useState(false);
     const router = useRouter();
     const [state, action, isPending] = useActionState(async () => {
-        const response = await SpaceLeaveAction(session, spaceId);
+        const response = await spaceLeaveAction(session, spaceId);
 
         if (!response.error) {
             setOpen(false);

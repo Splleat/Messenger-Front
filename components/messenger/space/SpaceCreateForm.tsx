@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Field, FieldError, FieldGroup } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { SpaceCreateAction } from '@/actions/messenger/space-create.action';
+import { spaceCreateAction } from '@/actions/messenger/space-create.action';
 import { FormState } from '@/types/common';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
@@ -32,7 +32,7 @@ export function SpaceCreateForm() {
                 return parsed.state;
             }
 
-            const response = await SpaceCreateAction(data);
+            const response = await spaceCreateAction(data);
 
             if (!response.error) {
                 setOpen(false);

@@ -8,7 +8,7 @@ import { auth } from '@/auth';
 import { validateFormData } from '@/lib/form-validator';
 import { channelCreateSchema } from '@/schema/messenger';
 
-export async function ChannelCreateAction(
+export async function channelCreateAction(
     data: FormData,
     spaceId?: string,
 ): Promise<FormState> {

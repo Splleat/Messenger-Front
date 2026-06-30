@@ -1,12 +1,12 @@
 ﻿'use client';
 
 import { Button } from '@/components/ui/button';
-import { LogoutAction } from '@/actions/auth/logout.action';
+import { logoutAction } from '@/actions/auth/logout.action';
 import { useActionState } from 'react';
 
 export default function LogoutButton() {
     const [state, action, isPending] = useActionState(async () => {
-        return await LogoutAction();
+        return await logoutAction();
     }, null);
 
     return (

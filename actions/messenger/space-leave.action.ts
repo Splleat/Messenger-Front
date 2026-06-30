@@ -5,7 +5,7 @@ import { Session } from 'next-auth';
 import { authenticatedFetch } from '@/lib/http';
 import { ApiErrorResponse, FormState } from '@/types/common';
 
-export async function SpaceLeaveAction(
+export async function spaceLeaveAction(
     session: Session,
     spaceId: string,
 ): Promise<FormState> {
