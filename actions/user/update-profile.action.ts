@@ -1,3 +1,5 @@
+'use server'
+
 import { API_BASE_URL } from '@/lib/config';
 import { Session } from 'next-auth';
 import { authenticatedFetch } from '@/lib/http';

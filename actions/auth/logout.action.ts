@@ -1,4 +1,5 @@
 'use server';
+
 import { API_BASE_URL } from '@/lib/config';
 
 import { auth, signOut } from '@/auth';
