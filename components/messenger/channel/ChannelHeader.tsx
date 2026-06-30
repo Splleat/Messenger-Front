@@ -1,13 +1,13 @@
-import { Hash } from 'lucide-react';
+﻿import { Hash } from 'lucide-react';
 import {
     ChannelListResponse,
     ChannelParticipantResponse,
     SpaceResponse,
 } from '@/types/common';
 import * as React from 'react';
-import { DirectChannelInviteForm } from '@/components/messenger/DirectChannelInviteForm';
-import { ChannelParticipantDialog } from '@/components/messenger/ChannelParticipantDialog';
-import { ChannelLeaveButton } from '@/components/messenger/ChannelLeaveButton';
+import { DirectChannelInviteForm } from '@/components/messenger/direct/DirectChannelInviteForm';
+import { ChannelParticipantDialog } from '@/components/messenger/channel/ChannelParticipantDialog';
+import { ChannelLeaveButton } from '@/components/messenger/channel/ChannelLeaveButton';
 import { Session } from 'next-auth';
 
 export function ChannelHeader({

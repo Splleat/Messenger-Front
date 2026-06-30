@@ -1,8 +1,8 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+﻿import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { MessageResponse } from '@/types/common';
 import React from 'react';
 import { useMounted } from '@/hooks/use-mounted';
-import { AttachmentRenderer } from '@/components/messenger/AttachmentRenderer';
+import { AttachmentRenderer } from '@/components/messenger/message/AttachmentRenderer';
 
 export const MessageItem = React.memo(function MessageItem({
     username,

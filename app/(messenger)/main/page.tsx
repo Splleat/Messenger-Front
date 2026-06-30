@@ -1,9 +1,9 @@
-import { SpaceSidebar } from '@/components/messenger/SpaceSidebar';
-import { ChannelSidebar } from '@/components/messenger/ChannelSidebar';
-import { ChannelHeader } from '@/components/messenger/ChannelHeader';
+﻿import { SpaceSidebar } from '@/components/messenger/space/SpaceSidebar';
+import { ChannelSidebar } from '@/components/messenger/channel/ChannelSidebar';
+import { ChannelHeader } from '@/components/messenger/channel/ChannelHeader';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
-import { ChannelChat } from '@/components/messenger/ChannelChat';
+import { ChannelChat } from '@/components/messenger/channel/ChannelChat';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import {
     fetchChannelEnterMessages,

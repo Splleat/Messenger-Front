@@ -1,8 +1,8 @@
-'use client';
+﻿'use client';
 
 import { ChannelEnterResponse, MessageRequest } from '@/types/common';
-import { ChannelChatInput } from '@/components/messenger/ChannelChatInput';
-import { MessageList } from '@/components/messenger/MessageList';
+import { ChannelChatInput } from '@/components/messenger/channel/ChannelChatInput';
+import { MessageList } from '@/components/messenger/message/MessageList';
 import { Session } from 'next-auth';
 import { Card, CardContent } from '@/components/ui/card';
 import { uuidv7 } from 'uuidv7';

@@ -1,8 +1,8 @@
-import { ScrollArea } from '@/components/ui/scroll-area';
+﻿import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { SpaceIcon } from '@/components/messenger/SpaceIcon';
-import { SpaceCreateForm } from '@/components/messenger/SpaceCreateForm';
+import { SpaceIcon } from '@/components/messenger/space/SpaceIcon';
+import { SpaceCreateForm } from '@/components/messenger/space/SpaceCreateForm';
 import { SpaceListResponse } from '@/types/common';
 
 export async function SpaceSidebar({

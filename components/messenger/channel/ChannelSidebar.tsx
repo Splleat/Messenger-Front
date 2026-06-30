@@ -1,11 +1,11 @@
-'use client';
+﻿'use client';
 
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { ChevronDown, Hash, LogOut, Plus } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Session } from 'next-auth';
-import { ChannelCreateDialog } from '@/components/messenger/ChannelCreateDialog';
+import { ChannelCreateDialog } from '@/components/messenger/channel/ChannelCreateDialog';
 import Link from 'next/link';
 import {
     ChannelListResponse,
@@ -34,8 +34,8 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { SpaceInviteDialog } from '@/components/messenger/SpaceInviteDialog';
-import { SpaceLeaveDialog } from '@/components/messenger/SpaceLeaveDialog';
+import { SpaceInviteDialog } from '@/components/messenger/space/SpaceInviteDialog';
+import { SpaceLeaveDialog } from '@/components/messenger/space/SpaceLeaveDialog';
 import LogoutButton from '@/components/auth/LogoutButton';
 
 export function ChannelSidebar({
