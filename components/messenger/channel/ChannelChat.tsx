@@ -1,6 +1,10 @@
 ﻿'use client';
 
-import { ChannelEnterResponse, MessageRequest } from '@/types/messenger';
+import {
+    ChannelEnterResponse,
+    MessageRequest,
+    TypingEvent,
+} from '@/types/messenger';
 import { ChannelChatInput } from '@/components/messenger/channel/ChannelChatInput';
 import { MessageList } from '@/components/messenger/message/MessageList';
 import { Session } from 'next-auth';
@@ -9,6 +13,7 @@ import { uuidv7 } from 'uuidv7';
 import { useChannelMessages } from '@/hooks/use-channel-messages';
 import { useChannelSocket } from '@/hooks/use-channel-socket';
 import { useStorageUpload } from '@/hooks/use-storage-upload';
+import { useState } from 'react';
 
 export function ChannelChat({
     session,
@@ -36,14 +41,25 @@ export function ChannelChat({
         syncFrom,
     } = useChannelMessages(session, channelId, messageHistory);
 
-    const { sendMessage } = useChannelSocket({
+    const { sendMessage, sendTyping } = useChannelSocket({
         channelId,
         accessToken,
-        onMessage: addMessage,
+        receiveMessage: addMessage,
+        receiveTyping: onTypingEvent,
         onReconnect: syncFrom,
     });
 
     const { uploadFile } = useStorageUpload(session);
+
+    const [typingUser, setTypingUser] = useState<TypingEvent | null>(null);
+
+    function onTypingEvent(event: TypingEvent) {
+        if (event.isTyping && event.userId !== session.user?.id) {
+            setTypingUser(event);
+        } else {
+            setTypingUser(null);
+        }
+    }
 
     async function handleSubmit(text: string, file?: File) {
         if (!file && !text.trim()) {
@@ -91,10 +107,16 @@ export function ChannelChat({
                 />
             </CardContent>
 
-            <CardContent className="p-4 bg-background">
+            <CardContent className="relative p-4 bg-background">
+                {typingUser && (
+                    <p className="absolute -top-2 left-5 text-xs text-muted-foreground">
+                        {typingUser.username}님이 입력 중...
+                    </p>
+                )}
                 <ChannelChatInput
                     placeHolder="메시지 전송"
                     onSubmit={handleSubmit}
+                    onTyping={(isTyping) => sendTyping({ isTyping })}
                 />
             </CardContent>
         </Card>

@@ -4,6 +4,8 @@ import {
     MessageEvent,
     MessageRequest,
     MessageResponse,
+    TypingEvent,
+    TypingRequest,
 } from '@/types/messenger';
 import { useCallback, useEffect, useRef } from 'react';
 import { Client } from '@stomp/stompjs';
@@ -12,20 +14,23 @@ import SockJS from 'sockjs-client';
 export function useChannelSocket({
     channelId,
     accessToken,
-    onMessage,
+    receiveMessage,
+    receiveTyping,
     onReconnect,
 }: {
     channelId: string;
     accessToken: string;
-    onMessage: (message: MessageResponse) => void;
+    receiveMessage: (message: MessageResponse) => void;
+    receiveTyping: (event: TypingEvent) => void;
     onReconnect: () => void;
 }) {
     const clientRef = useRef<Client | null>(null);
     const hasConnectedRef = useRef<boolean>(false);
-    const onMessageRef = useRef(onMessage);
+    const onMessageRef = useRef(receiveMessage);
+    const onTypingRef = useRef(receiveTyping);
     const onReconnectRef = useRef(onReconnect);
 
-    useEffect(() => { onMessageRef.current = onMessage; }, [onMessage]);
+    useEffect(() => { onMessageRef.current = receiveMessage; }, [receiveMessage]);
     useEffect(() => { onReconnectRef.current = onReconnect; }, [onReconnect]);
 
     useEffect(() => {
@@ -60,6 +65,16 @@ export function useChannelSocket({
                         }
                     },
                 );
+                client.subscribe(
+                    `/sub/channels/${channelId}/typing`,
+                    (event) => {
+                        const payload = JSON.parse(
+                            event.body
+                        ) as TypingEvent;
+
+                        onTypingRef.current(payload);
+                    }
+                )
                 if (hasConnectedRef.current) {
                     onReconnectRef.current();
                 }
@@ -83,8 +98,19 @@ export function useChannelSocket({
         client.publish({
             destination: `/pub/channels/${channelId}/messages`,
             body: JSON.stringify(request),
-            });
+        });
     }, [channelId]);
 
-    return { sendMessage };
+    const sendTyping = useCallback((request: TypingRequest) => {
+        const client = clientRef.current;
+
+        if (!client?.connected) return;
+
+        client.publish({
+            destination: `/pub/channels/${channelId}/typing`,
+            body: JSON.stringify(request),
+        });
+    }, [channelId]);
+
+    return { sendMessage, sendTyping };
 }

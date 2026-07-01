@@ -60,6 +60,17 @@ export interface MessageRequest {
     attachments?: AttachmentCreateRequest[];
 }
 
+export interface TypingRequest {
+    isTyping: boolean;
+}
+
+export interface TypingEvent {
+    userId: string;
+    channelId: string;
+    username: string;
+    isTyping: boolean;
+}
+
 export type MessageEventType = 'CREATED' | 'UPDATED' | 'DELETED';
 
 export interface MessageEvent<T> {
@@ -82,6 +93,13 @@ export interface MessageUpdatedData {
 export interface MessageDeletedData {
     messageId: string;
     channelId: string;
+}
+
+export interface MessageTypingEvent {
+    userId: string;
+    channelId: string;
+    username: string;
+    isTyping: boolean;
 }
 
 export interface MessageResponse {

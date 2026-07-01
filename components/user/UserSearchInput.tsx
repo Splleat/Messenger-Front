@@ -19,7 +19,7 @@ interface Props {
     selected: UserSearchResult | null;
 }
 
-export function UserSearchInput({ onSelect, selected }: Props) {
+export function UserSearchInput({ onSelect, selected }: Readonly<Props>) {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState<UserSearchResult[]>([]);
     const [open, setOpen] = useState(false);
@@ -57,7 +57,9 @@ export function UserSearchInput({ onSelect, selected }: Props) {
                     </Avatar>
                     <span>{selected.name}</span>
                     {selected.statusMessage && (
-                        <span className="text-xs text-muted-foreground truncate">{selected.statusMessage}</span>
+                        <span className="text-xs text-muted-foreground truncate">
+                            {selected.statusMessage}
+                        </span>
                     )}
                 </div>
             )}
@@ -92,12 +94,16 @@ export function UserSearchInput({ onSelect, selected }: Props) {
                                     >
                                         <Avatar className="h-6 w-6">
                                             <AvatarImage src={user.imageUrl} />
-                                            <AvatarFallback>{user.name[0]}</AvatarFallback>
+                                            <AvatarFallback>
+                                                {user.name[0]}
+                                            </AvatarFallback>
                                         </Avatar>
                                         <div className="flex flex-col">
                                             <span>{user.name}</span>
                                             {user.statusMessage && (
-                                                <span className="text-xs text-muted-foreground">{user.statusMessage}</span>
+                                                <span className="text-xs text-muted-foreground">
+                                                    {user.statusMessage}
+                                                </span>
                                             )}
                                         </div>
                                     </CommandItem>

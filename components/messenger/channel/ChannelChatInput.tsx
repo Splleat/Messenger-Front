@@ -9,31 +9,60 @@ import { Paperclip, SendHorizontal, X } from 'lucide-react';
 export function ChannelChatInput({
     placeHolder,
     onSubmit,
+    onTyping,
 }: Readonly<{
     placeHolder: string;
     onSubmit: (text: string, file?: File) => void;
+    onTyping: (isTyping: boolean) => void;
 }>) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const formRef = useRef<HTMLFormElement>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const isTypingRef = useRef(false);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const [state, action, isPending] = useActionState(
         async (_prev: FormState, data: FormData) => {
             const text = data.get('text') as string;
-            
+
             if (!text.trim() && !selectedFile) {
                 return { error: '메시지를 입력해주세요.' };
             }
 
             onSubmit(text, selectedFile ?? undefined);
-            
+
+            // 타이핑 상태 해제
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+            onTyping(false);
+            isTypingRef.current = false
+
+            // 파일 선택 초기화
             setSelectedFile(null);
             formRef.current?.reset();
-            
+
             return { error: null };
         },
-        { error: null }
+        { error: null },
     );
+
+    function handleInputChange() {
+        if (!isTypingRef.current) {
+            isTypingRef.current = true;
+            onTyping(true);
+        }
+
+        // 기존 타이머 리셋
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+
+        timeoutRef.current = setTimeout(() => {
+            isTypingRef.current = false;
+            onTyping(false);
+        }, 3000);
+    }
 
     const handleFileClick = () => {
         fileInputRef.current?.click();
@@ -86,6 +115,7 @@ export function ChannelChatInput({
                         autoComplete="off"
                         className="bg-transparent border-none focus-visible:ring-0 text-foreground placeholder:text-muted-foreground py-6"
                         placeholder={placeHolder}
+                        onChange={handleInputChange}
                     />
                     <Button 
                         type="submit" 
