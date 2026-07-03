@@ -17,7 +17,7 @@ import { fetchMyProfile } from '@/lib/api-user';
 export default async function MessengerMainPage({
     searchParams,
 }: Readonly<{
-    searchParams: Promise<{ channelId?: string, spaceId?: string }>;
+    searchParams: Promise<{ channelId?: string; spaceId?: string }>;
 }>) {
     const session = await auth();
 
@@ -31,7 +31,9 @@ export default async function MessengerMainPage({
 
     const [spaceList, selectedSpace, myProfile] = await Promise.all([
         fetchSpaceList(session),
-        selectedSpaceId ? fetchSpace(session, selectedSpaceId) : Promise.resolve(undefined),
+        selectedSpaceId
+            ? fetchSpace(session, selectedSpaceId)
+            : Promise.resolve(undefined),
         fetchMyProfile(session),
     ]);
 
@@ -47,12 +49,15 @@ export default async function MessengerMainPage({
         return (
             <SidebarProvider>
                 <div className="flex h-screen w-full overflow-hidden bg-background">
-                    <SpaceSidebar spaceList={spaceList} />
+                    <SpaceSidebar
+                        session={session}
+                        profile={myProfile}
+                        spaceList={spaceList}
+                    />
                     <ChannelSidebar
                         session={session}
                         channelList={channelList}
                         space={selectedSpace}
-                        myProfile={myProfile}
                     />
                     <main className="flex flex-col flex-1 min-w-0 bg-background items-center justify-center text-muted-foreground">
                         채널을 선택해주세요.
@@ -65,17 +70,20 @@ export default async function MessengerMainPage({
     const [participants, messages] = await Promise.all([
         fetchChannelParticipants(session, selectedChannelId),
         fetchChannelEnterMessages(session, selectedChannelId, selectedSpaceId),
-    ])
+    ]);
 
     return (
         <SidebarProvider>
             <div className="flex h-screen w-full overflow-hidden bg-background">
-                <SpaceSidebar spaceList={spaceList} />
+                <SpaceSidebar
+                    session={session}
+                    profile={myProfile}
+                    spaceList={spaceList}
+                />
                 <ChannelSidebar
                     session={session}
                     channelList={channelList}
                     space={selectedSpace}
-                    myProfile={myProfile}
                 />
 
                 <main className="flex flex-col flex-1 min-w-0 bg-background">

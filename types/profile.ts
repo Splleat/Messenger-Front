@@ -6,6 +6,7 @@ export interface MyProfileResponse {
 }
 
 export interface ProfileResponse {
+    userId: string;
     name: string;
     imageUrl?: string;
     statusMessage?: string;
