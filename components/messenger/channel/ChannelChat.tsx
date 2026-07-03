@@ -49,7 +49,7 @@ export function ChannelChat({
         onReconnect: syncFrom,
     });
 
-    const { uploadFile } = useStorageUpload(session);
+    const { uploadFile, isUploading } = useStorageUpload(session);
 
     const [typingUser, setTypingUser] = useState<TypingEvent | null>(null);
 
@@ -117,6 +117,7 @@ export function ChannelChat({
                     placeHolder="메시지 전송"
                     onSubmit={handleSubmit}
                     onTyping={(isTyping) => sendTyping({ isTyping })}
+                    isUploading={isUploading}
                 />
             </CardContent>
         </Card>

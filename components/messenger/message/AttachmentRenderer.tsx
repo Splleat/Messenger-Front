@@ -6,7 +6,7 @@ import { downloadFile } from '@/lib/download';
 export function AttachmentRenderer({
     attachment,
 }: Readonly<{ attachment: AttachmentResponse }>) {
-    const { type, url } = attachment;
+    const { url } = attachment;
 
     const fileName = url.substring(url.lastIndexOf('/') + 1);
 

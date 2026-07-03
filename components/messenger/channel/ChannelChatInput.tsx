@@ -5,15 +5,18 @@ import React, { useActionState, useRef, useState } from 'react';
 import { FormState } from '@/types/common';
 import { Paperclip, SendHorizontal, X } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
+import { Spinner } from '@/components/ui/spinner';
 
 export function ChannelChatInput({
     placeHolder,
     onSubmit,
     onTyping,
+    isUploading,
 }: Readonly<{
     placeHolder: string;
     onSubmit: (text: string, file?: File) => void;
     onTyping: (isTyping: boolean) => void;
+    isUploading: boolean;
 }>) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const formRef = useRef<HTMLFormElement>(null);
@@ -107,6 +110,7 @@ export function ChannelChatInput({
                     type="button"
                     variant="ghost"
                     size="icon"
+                    disabled={isUploading}
                     className="text-muted-foreground hover:text-primary shrink-0"
                     onClick={handleFileClick}
                 >
@@ -125,14 +129,18 @@ export function ChannelChatInput({
                         onChange={handleInputChange}
                         onKeyDown={handleKeyDown}
                     />
-                    <Button 
-                        type="submit" 
+                    <Button
+                        type="submit"
                         size="icon"
                         variant="ghost"
-                        disabled={isPending}
+                        disabled={isPending || isUploading}
                         className="text-primary hover:text-primary/80 shrink-0"
                     >
-                        <SendHorizontal className="w-5 h-5" />
+                        {isUploading ? (
+                            <Spinner />
+                        ) : (
+                            <SendHorizontal className="w-5 h-5" />
+                        )}
                     </Button>
                 </form>
             </div>

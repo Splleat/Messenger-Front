@@ -4,6 +4,7 @@ import { MessageResponse } from '@/types/messenger';
 import { MessageItem } from '@/components/messenger/message/MessageItem';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { useRef, useState } from 'react';
+import { Spinner } from '@/components/ui/spinner';
 
 interface MessageListProps {
     messages: MessageResponse[];
@@ -74,6 +75,20 @@ export function MessageList({
             }}
             itemContent={(_, msg) => {
                 return <MessageItem {...msg} />;
+            }}
+            components={{
+                Header: () =>
+                    isLoadingPrevious ? (
+                        <div className="flex justify-center py-3">
+                            <Spinner className="text-muted-foreground" />
+                        </div>
+                    ) : null,
+                Footer: () =>
+                    isLoadingNext ? (
+                        <div className="flex justify-center py-3">
+                            <Spinner className="text-muted-foreground" />
+                        </div>
+                    ) : null,
             }}
         />
     );
