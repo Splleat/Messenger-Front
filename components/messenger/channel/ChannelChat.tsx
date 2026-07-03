@@ -13,7 +13,7 @@ import { uuidv7 } from 'uuidv7';
 import { useChannelMessages } from '@/hooks/use-channel-messages';
 import { useChannelSocket } from '@/hooks/use-channel-socket';
 import { useStorageUpload } from '@/hooks/use-storage-upload';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 export function ChannelChat({
     session,
@@ -40,7 +40,6 @@ export function ChannelChat({
         isFetchingNextPage,
         syncFrom,
     } = useChannelMessages(session, channelId, messageHistory);
-
     const { sendMessage, sendTyping } = useChannelSocket({
         channelId,
         accessToken,
@@ -48,10 +47,10 @@ export function ChannelChat({
         receiveTyping: onTypingEvent,
         onReconnect: syncFrom,
     });
-
     const { uploadFile, isUploading } = useStorageUpload(session);
-
     const [typingUser, setTypingUser] = useState<TypingEvent | null>(null);
+    const [isDragging, setIsDragging] = useState(false);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     function onTypingEvent(event: TypingEvent) {
         if (event.isTyping && event.userId !== session.user?.id) {
@@ -90,8 +89,45 @@ export function ChannelChat({
         }
     }
 
+    function handleDragEnter(e: React.DragEvent<HTMLDivElement>) {
+        e.preventDefault();
+        setIsDragging(true);
+    }
+
+    function handleDragOver(e: React.DragEvent<HTMLDivElement>) {
+        e.preventDefault();
+    }
+
+    function handleDrop(e: React.DragEvent<HTMLDivElement>) {
+        e.preventDefault();
+
+        const file = e.dataTransfer.files?.[0];
+
+        if (file) {
+            setSelectedFile(file);
+        }
+
+        setIsDragging(false);
+    }
+
+    function handleDragLeave(e: React.DragEvent<HTMLDivElement>) {
+        e.preventDefault();
+        setIsDragging(false);
+    }
+
     return (
-        <Card className="flex h-full min-h-0 flex-col overflow-hidden border-none shadow-none bg-background">
+        <Card
+            className="relative flex h-full min-h-0 flex-col overflow-hidden border-none shadow-none bg-background"
+            onDragEnter={handleDragEnter}
+        >
+            {isDragging && (
+                <div
+                    className="absolute inset-2 z-20 rounded-lg border-2 border-dashed border-primary bg-primary/5"
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}
+                    onDragLeave={handleDragLeave}
+                />
+            )}
             <CardContent className="flex-1 min-h-0 p-0">
                 <MessageList
                     key={channelId}
@@ -118,6 +154,8 @@ export function ChannelChat({
                     onSubmit={handleSubmit}
                     onTyping={(isTyping) => sendTyping({ isTyping })}
                     isUploading={isUploading}
+                    selectedFile={selectedFile}
+                    onFileChange={setSelectedFile}
                 />
             </CardContent>
         </Card>

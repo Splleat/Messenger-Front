@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import React, { useActionState, useRef, useState } from 'react';
+import React, { useActionState, useRef } from 'react';
 import { FormState } from '@/types/common';
 import { Paperclip, SendHorizontal, X } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,15 +12,18 @@ export function ChannelChatInput({
     onSubmit,
     onTyping,
     isUploading,
+    selectedFile,
+    onFileChange,
 }: Readonly<{
     placeHolder: string;
     onSubmit: (text: string, file?: File) => void;
     onTyping: (isTyping: boolean) => void;
     isUploading: boolean;
+    selectedFile: File | null;
+    onFileChange: (file: File | null) => void;
 }>) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const formRef = useRef<HTMLFormElement>(null);
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const isTypingRef = useRef(false);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -39,10 +42,10 @@ export function ChannelChatInput({
                 clearTimeout(timeoutRef.current);
             }
             onTyping(false);
-            isTypingRef.current = false
+            isTypingRef.current = false;
 
             // 파일 선택 초기화
-            setSelectedFile(null);
+            onFileChange(null);
             formRef.current?.reset();
 
             return { error: null };
@@ -74,7 +77,7 @@ export function ChannelChatInput({
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            setSelectedFile(file);
+            onFileChange(file);
         }
     };
 
@@ -87,12 +90,12 @@ export function ChannelChatInput({
     }
 
     return (
-        <div className="px-4 pb-6 bg-background">
+        <div className="relative px-4 pb-6 bg-background">
             {selectedFile && (
                 <div className="mb-2 px-2 py-1 text-xs bg-muted rounded-md flex items-center justify-between">
                     <span className="truncate">{selectedFile.name}</span>
                     <button
-                        onClick={() => setSelectedFile(null)}
+                        onClick={() => onFileChange(null)}
                         className="text-muted-foreground hover:text-foreground"
                     >
                         <X className="w-3 h-3" />
