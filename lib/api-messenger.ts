@@ -9,56 +9,33 @@ import {
     SpaceResponse,
 } from '@/types/messenger';
 import { Session } from 'next-auth';
-import { authenticatedFetch } from '@/lib/http';
+import { authenticatedFetch, fetchResult } from '@/lib/http';
+import { ActionResponse } from '@/types/common';
 
-export async function fetchChannelList(session: Session) {
-    const response = await authenticatedFetch(
+export async function fetchChannelList(
+    session: Session,
+): Promise<ActionResponse<ChannelListResponse[]>> {
+    return fetchResult<ChannelListResponse[]>(
         session,
         `${API_BASE_URL}/channels`,
     );
-
-    if (!response.ok) {
-        return [];
-    }
-
-    const data: ChannelListResponse[] = await response.json();
-
-    return data;
 }
 
-export async function fetchSpaceList(session: Session) {
-    const response = await authenticatedFetch(
-        session,
-        `${API_BASE_URL}/spaces`,
-    );
-
-    if (!response.ok) {
-        return [];
-    }
-
-    const data: SpaceListResponse[] = await response.json();
-
-    return data;
+export async function fetchSpaceList(
+    session: Session,
+): Promise<ActionResponse<SpaceListResponse[]>> {
+    return fetchResult<SpaceListResponse[]>(session, `${API_BASE_URL}/spaces`);
 }
 
 export async function fetchChannelParticipants(
     session: Session,
     channelId: string,
-) {
-    const response = await authenticatedFetch(
+): Promise<ActionResponse<ChannelParticipantResponse[]>> {
+    return fetchResult<ChannelParticipantResponse[]>(
         session,
         `${API_BASE_URL}/channels/${channelId}/participants`,
     );
-
-    if (!response.ok) {
-        return [];
-    }
-
-    const data: ChannelParticipantResponse[] = await response.json();
-
-    return data;
 }
-
 
 export async function fetchMessages(
     session: Session,
@@ -98,7 +75,7 @@ export async function fetchMessages(
             };
         }
         default:
-            throw new Error('처리할 수 없는 방향값');
+             throw new Error('처리할 수 없는 방향값');
     }
 }
 
@@ -149,33 +126,34 @@ export async function fetchChannelEnterMessages(
     const response = await authenticatedFetch(session, url);
 
     if (!response.ok) {
-        return { messages: [], hasPrev: false, prevCursorId: undefined, hasNext: false, nextCursorId: undefined };
+        return {
+            messages: [],
+            hasPrev: false,
+            prevCursorId: undefined,
+            hasNext: false,
+            nextCursorId: undefined,
+        };
     }
 
     return await response.json();
 }
 
-export async function fetchSpace(session: Session, spaceId: string) {
-    const response = await authenticatedFetch(
+export async function fetchSpace(
+    session: Session,
+    spaceId: string,
+): Promise<ActionResponse<SpaceResponse>> {
+    return fetchResult<SpaceResponse>(
         session,
         `${API_BASE_URL}/spaces/${spaceId}`,
     );
-
-    if (!response.ok) {
-        return undefined;
-    }
-
-    const data: SpaceResponse = await response.json();
-
-    return data;
 }
 
 export async function updateChannelLastRead(
     session: Session,
     channelId: string,
     lastReadMessageId: string,
-) {
-    await authenticatedFetch(
+): Promise<ActionResponse<void>> {
+    return fetchResult<void>(
         session,
         `${API_BASE_URL}/channels/${channelId}/read`,
         { method: 'PATCH', body: JSON.stringify({ lastReadMessageId }) },

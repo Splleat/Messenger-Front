@@ -1,5 +1,6 @@
 import { signOut } from '@/auth';
 import { Session } from 'next-auth';
+import { ActionResponse, ApiErrorResponse } from '@/types/common';
 
 export class AuthenticationError extends Error {
     constructor(message = '인증이 만료되었습니다. 다시 로그인해주세요.') {
@@ -35,4 +36,42 @@ export async function authenticatedFetch(
     }
 
     return response;
+}
+
+export async function fetchResult<T>(
+    session: Session | null,
+    url: string,
+    options?: RequestInit,
+): Promise<ActionResponse<T>> {
+    const response = await authenticatedFetch(session, url, options);
+
+    if (!response.ok) {
+        const error: ApiErrorResponse = await response.json();
+
+        return { success: false, error };
+    }
+
+    const text = await response.text();
+
+    if (!text) {
+        return { success: true } as ActionResponse<T>;
+    }
+
+    const data: T = JSON.parse(text);
+
+    return { success: true, data } as ActionResponse<T>;
+}
+
+export function unwrap<T>(
+    result: ActionResponse<T>,
+    fallback: T,
+): { data: T; error: boolean } {
+    if (result.success) {
+        return {
+            data: (result as { success: true; data: T }).data,
+            error: false,
+        };
+    }
+
+    return { data: fallback, error: true }
 }
