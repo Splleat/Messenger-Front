@@ -1,10 +1,10 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import React, { useActionState, useRef, useState } from 'react';
 import { FormState } from '@/types/common';
 import { Paperclip, SendHorizontal, X } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
 
 export function ChannelChatInput({
     placeHolder,
@@ -75,6 +75,14 @@ export function ChannelChatInput({
         }
     };
 
+    function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+        // Enter가 눌렸고 Shift가 눌리지 않았다면 메시지 전송
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            formRef.current?.requestSubmit();
+        }
+    }
+
     return (
         <div className="px-4 pb-6 bg-background">
             {selectedFile && (
@@ -109,13 +117,13 @@ export function ChannelChatInput({
                     className="flex-1 flex items-center gap-2"
                     action={action}
                 >
-                    <Input
-                        type="text"
+                    <Textarea
                         name="text"
                         autoComplete="off"
                         className="bg-transparent border-none focus-visible:ring-0 text-foreground placeholder:text-muted-foreground py-6"
                         placeholder={placeHolder}
                         onChange={handleInputChange}
+                        onKeyDown={handleKeyDown}
                     />
                     <Button 
                         type="submit" 
