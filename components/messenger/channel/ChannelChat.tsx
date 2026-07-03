@@ -14,6 +14,8 @@ import { useChannelMessages } from '@/hooks/use-channel-messages';
 import { useChannelSocket } from '@/hooks/use-channel-socket';
 import { useStorageUpload } from '@/hooks/use-storage-upload';
 import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 export function ChannelChat({
     session,
@@ -40,7 +42,7 @@ export function ChannelChat({
         isFetchingNextPage,
         syncFrom,
     } = useChannelMessages(session, channelId, messageHistory);
-    const { sendMessage, sendTyping } = useChannelSocket({
+    const { sendMessage, sendTyping, showDisconnectBanner } = useChannelSocket({
         channelId,
         accessToken,
         receiveMessage: addMessage,
@@ -51,6 +53,7 @@ export function ChannelChat({
     const [typingUser, setTypingUser] = useState<TypingEvent | null>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const router = useRouter();
 
     function onTypingEvent(event: TypingEvent) {
         if (event.isTyping && event.userId !== session.user?.id) {
@@ -115,6 +118,23 @@ export function ChannelChat({
     function handleDragLeave(e: React.DragEvent<HTMLDivElement>) {
         e.preventDefault();
         setIsDragging(false);
+    }
+
+    if (showDisconnectBanner) {
+        return (
+            <div className="flex flex-col items-center gap-2 py-4 text-center">
+                <p className="text-xs text-muted-foreground">
+                    채널 연결에 실패했습니다.
+                </p>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => router.refresh()}
+                >
+                    다시 시도
+                </Button>
+            </div>
+        );
     }
 
     return (

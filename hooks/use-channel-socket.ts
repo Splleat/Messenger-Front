@@ -7,7 +7,7 @@ import {
     TypingEvent,
     TypingRequest,
 } from '@/types/messenger';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
@@ -29,6 +29,8 @@ export function useChannelSocket({
     const onMessageRef = useRef(receiveMessage);
     const onTypingRef = useRef(receiveTyping);
     const onReconnectRef = useRef(onReconnect);
+    const [onConnected, setOnConnected] = useState(false);
+    const [hasEverConnected, setHasEverConnected] = useState(false);
 
     useEffect(() => { onMessageRef.current = receiveMessage; }, [receiveMessage]);
     useEffect(() => { onReconnectRef.current = onReconnect; }, [onReconnect]);
@@ -79,7 +81,13 @@ export function useChannelSocket({
                     onReconnectRef.current();
                 }
                 hasConnectedRef.current = true;
+                setOnConnected(true);
+                setHasEverConnected(true);
             },
+            onDisconnect: () => {
+                setOnConnected(false);
+                hasConnectedRef.current = false;
+            }
         });
 
         client.activate();
@@ -112,5 +120,7 @@ export function useChannelSocket({
         });
     }, [channelId]);
 
-    return { sendMessage, sendTyping };
+    const showDisconnectBanner = !onConnected && hasEverConnected;
+
+    return { sendMessage, sendTyping, showDisconnectBanner };
 }
