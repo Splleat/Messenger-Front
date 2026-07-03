@@ -1,11 +1,19 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import React, { useActionState, useRef } from 'react';
+import React, { useActionState, useEffect, useMemo, useRef } from 'react';
 import { FormState } from '@/types/common';
 import { Paperclip, SendHorizontal, X } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Spinner } from '@/components/ui/spinner';
+import { AttachmentCard } from '@/components/messenger/message/AttachmentCard';
+
+function formatFileSize(bytes: number): string {
+    if (bytes < 1024) return `${bytes}B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)}KB`;
+
+    return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
+}
 
 export function ChannelChatInput({
     placeHolder,
@@ -26,6 +34,22 @@ export function ChannelChatInput({
     const formRef = useRef<HTMLFormElement>(null);
     const isTypingRef = useRef(false);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    const previewUrl = useMemo(() => {
+        if (selectedFile?.type.startsWith('image/')) {
+            return URL.createObjectURL(selectedFile);
+        }
+
+        return null;
+    }, [selectedFile]);
+
+    useEffect(() => {
+        return () => {
+            if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
+            }
+        };
+    }, [previewUrl]);
 
     const [state, action, isPending] = useActionState(
         async (_prev: FormState, data: FormData) => {
@@ -89,17 +113,32 @@ export function ChannelChatInput({
         }
     }
 
+    function handlePaste(e: React.ClipboardEvent) {
+        const file = e.clipboardData?.files[0];
+
+        if (file) {
+            e.preventDefault();
+            onFileChange(file);
+        }
+    }
+
     return (
         <div className="relative px-4 pb-6 bg-background">
             {selectedFile && (
-                <div className="mb-2 px-2 py-1 text-xs bg-muted rounded-md flex items-center justify-between">
-                    <span className="truncate">{selectedFile.name}</span>
-                    <button
-                        onClick={() => onFileChange(null)}
-                        className="text-muted-foreground hover:text-foreground"
-                    >
-                        <X className="w-3 h-3" />
-                    </button>
+                <div className="mb-2">
+                    <AttachmentCard
+                        name={selectedFile.name}
+                        sizeLabel={formatFileSize(selectedFile.size)}
+                        thumbnailUrl={previewUrl ?? undefined}
+                        action={
+                            <button
+                                onClick={() => onFileChange(null)}
+                                className="ml-auto shrink-0 text-muted-foreground hover:text-foreground"
+                            >
+                                <X className="w-3.5 h-3.5" />
+                            </button>
+                        }
+                    />
                 </div>
             )}
             <div className="flex items-center gap-3 bg-muted/50 rounded-lg px-4 py-1 border border-border focus-within:border-primary/50 transition-all shadow-sm">
@@ -131,6 +170,7 @@ export function ChannelChatInput({
                         placeholder={placeHolder}
                         onChange={handleInputChange}
                         onKeyDown={handleKeyDown}
+                        onPaste={handlePaste}
                     />
                     <Button
                         type="submit"
