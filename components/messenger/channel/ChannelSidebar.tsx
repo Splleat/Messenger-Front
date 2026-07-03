@@ -5,7 +5,9 @@ import { ChevronDown, Hash, LogOut, Plus } from 'lucide-react';
 import { Session } from 'next-auth';
 import { ChannelCreateDialog } from '@/components/messenger/channel/ChannelCreateDialog';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ChannelListResponse, SpaceResponse } from '@/types/messenger';
+import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -32,12 +34,15 @@ export function ChannelSidebar({
     session,
     space,
     channelList,
+    channelListError,
 }: Readonly<{
     session: Session;
     space?: SpaceResponse;
     channelList: ChannelListResponse[];
+    channelListError?: boolean;
 }>) {
     const title = space ? space.spaceName : '개인 채널';
+    const router = useRouter();
 
     return (
         <Sidebar
@@ -137,10 +142,25 @@ export function ChannelSidebar({
                                 </SidebarMenuItem>
                             ))}
 
-                            {channelList.length === 0 && (
-                                <div className="text-xs text-muted-foreground/60 py-4 text-center italic">
-                                    채널이 없습니다.
+                            {channelListError ? (
+                                <div className="flex flex-col items-center gap-2 py-4 text-center">
+                                    <p className="text-xs text-muted-foreground">
+                                        채널을 불러오지 못했습니다.
+                                    </p>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => router.refresh()}
+                                    >
+                                        다시 시도
+                                    </Button>
                                 </div>
+                            ) : (
+                                channelList.length === 0 && (
+                                    <div className="text-xs text-muted-foreground/60 py-4 text-center italic">
+                                        채널이 없습니다.
+                                    </div>
+                                )
                             )}
                         </SidebarMenu>
                     </SidebarGroupContent>
