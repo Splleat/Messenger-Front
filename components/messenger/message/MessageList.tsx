@@ -77,18 +77,20 @@ export function MessageList({
                 return <MessageItem {...msg} />;
             }}
             components={{
-                Header: () =>
-                    isLoadingPrevious ? (
-                        <div className="flex justify-center py-3">
+                Header: () => (
+                    <div className="flex h-10 items-center justify-center">
+                        {isLoadingPrevious && (
                             <Spinner className="text-muted-foreground" />
-                        </div>
-                    ) : null,
-                Footer: () =>
-                    isLoadingNext ? (
-                        <div className="flex justify-center py-3">
+                        )}
+                    </div>
+                ),
+                Footer: () => (
+                    <div className="flex h-10 items-center justify-center">
+                        {isLoadingNext && (
                             <Spinner className="text-muted-foreground" />
-                        </div>
-                    ) : null,
+                        )}
+                    </div>
+                ),
             }}
         />
     );

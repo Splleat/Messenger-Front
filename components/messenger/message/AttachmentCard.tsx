@@ -2,14 +2,21 @@ import { Card, CardContent } from '@/components/ui/card';
 import { FileIcon } from 'lucide-react';
 import React from 'react';
 
+function formatFileSize(bytes: number): string {
+    if (bytes < 1024) return `${bytes}B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)}KB`;
+
+    return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
+}
+
 export function AttachmentCard({
     name,
-    sizeLabel,
+    size,
     thumbnailUrl,
     action,
 }: Readonly<{
     name: string;
-    sizeLabel?: string;
+    size?: number;
     thumbnailUrl?: string;
     action: React.ReactNode;
 }>) {
@@ -31,9 +38,9 @@ export function AttachmentCard({
                     <p className="truncate text-xs font-medium text-foreground">
                         {name}
                     </p>
-                    {sizeLabel && (
+                    {size !== undefined && (
                         <p className="text-xs text-muted-foreground">
-                            {sizeLabel}
+                            {formatFileSize(size)}
                         </p>
                     )}
                 </div>

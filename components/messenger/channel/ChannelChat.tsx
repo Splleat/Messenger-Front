@@ -78,8 +78,10 @@ export function ChannelChat({
             sendMessage({
                 attachments: [
                     {
+                        name: file.name,
                         type: isImage ? 'image' : 'file',
                         url: objectKey,
+                        size: file.size,
                     },
                 ],
                 ...request,

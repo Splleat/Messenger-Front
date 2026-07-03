@@ -8,13 +8,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Spinner } from '@/components/ui/spinner';
 import { AttachmentCard } from '@/components/messenger/message/AttachmentCard';
 
-function formatFileSize(bytes: number): string {
-    if (bytes < 1024) return `${bytes}B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)}KB`;
-
-    return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
-}
-
 export function ChannelChatInput({
     placeHolder,
     onSubmit,
@@ -128,7 +121,7 @@ export function ChannelChatInput({
                 <div className="mb-2">
                     <AttachmentCard
                         name={selectedFile.name}
-                        sizeLabel={formatFileSize(selectedFile.size)}
+                        size={selectedFile.size}
                         thumbnailUrl={previewUrl ?? undefined}
                         action={
                             <button

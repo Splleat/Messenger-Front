@@ -7,21 +7,47 @@ import { toast } from 'sonner';
 export function AttachmentRenderer({
     attachment,
 }: Readonly<{ attachment: AttachmentResponse }>) {
-    const { url, type } = attachment;
+    const { name, url, type, size } = attachment;
 
-    const fileName = url.substring(url.lastIndexOf('/') + 1);
+    if (type === 'image') {
+        return (
+            <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative inline-block"
+            >
+                <img
+                    src={url}
+                    alt={name}
+                    className="max-h-80 max-w-sm rounded-lg object-cover transition-opacity hover:opacity-90"
+                />
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        downloadFile(url, name).then(() =>
+                            toast.success('파일이 다운로드 되었습니다.'),
+                        );
+                    }}
+                    className="absolute top-2 right-2 rounded-md bg-background/80 p-1.5 opacity-0 backdrop-blur transition-opacity group-hover:opacity-100"
+                >
+                    <DownloadIcon className="w-4 h-4" />
+                </button>
+            </a>
+        );
+    }
 
     return (
         <a href={url} target="_blank" rel="noopener noreferrer">
             <AttachmentCard
-                name={fileName}
-                thumbnailUrl={type === 'image' ? url : undefined}
+                name={name}
+                size={size}
                 action={
                     <DownloadIcon
                         className="shrink-0 text-muted-foreground hover:text-foreground"
                         onClick={(e) => {
                             e.preventDefault();
-                            downloadFile(url, fileName).then(() => toast.success('파일이 다운로드 되었습니다.'));
+                            downloadFile(url, name).then(() => toast.success('파일이 다운로드 되었습니다.'));
                         }}
                     />
                 }

@@ -42,15 +42,19 @@ export interface DirectChannelInviteRequest {
 }
 
 export interface AttachmentCreateRequest {
+    name: string;
     type: string;
     url: string;
+    size: number;
 }
 
 export interface AttachmentResponse {
     id: string;
     messageId: string;
+    name: string;
     type: string;
     url: string;
+    size: number;
 }
 
 export interface MessageRequest {
