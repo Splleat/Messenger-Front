@@ -112,7 +112,6 @@ export default async function MessengerMainPage({
                 <ChannelChat
                     session={session}
                     channelId={selectedChannelId}
-                    accessToken={session.accessToken}
                     messageHistory={messages}
                 />
             </main>

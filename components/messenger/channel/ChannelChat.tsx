@@ -11,22 +11,20 @@ import { Session } from 'next-auth';
 import { Card, CardContent } from '@/components/ui/card';
 import { uuidv7 } from 'uuidv7';
 import { useChannelMessages } from '@/hooks/use-channel-messages';
-import { useChannelSocket } from '@/hooks/use-channel-socket';
 import { useStorageUpload } from '@/hooks/use-storage-upload';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import { useChannelSubscribe } from '@/hooks/use-channel-subscribe';
 
 export function ChannelChat({
     session,
     channelId,
-    accessToken,
     messageHistory,
 }: Readonly<{
     session: Session;
     channelId: string;
     spaceId?: string;
-    accessToken: string;
     messageHistory: ChannelEnterResponse;
 }>) {
     const {
@@ -40,15 +38,13 @@ export function ChannelChat({
         hasNextPage,
         isFetchingPreviousPage,
         isFetchingNextPage,
-        syncFrom,
     } = useChannelMessages(session, channelId, messageHistory);
-    const { sendMessage, sendTyping, showDisconnectBanner } = useChannelSocket({
+    const { sendMessage, sendTyping, showDisconnectBanner } = useChannelSubscribe({
         channelId,
-        accessToken,
         receiveMessage: addMessage,
         receiveTyping: onTypingEvent,
-        onReconnect: syncFrom,
     });
+
     const { uploadFile, isUploading } = useStorageUpload(session);
     const [typingUser, setTypingUser] = useState<TypingEvent | null>(null);
     const [isDragging, setIsDragging] = useState(false);
