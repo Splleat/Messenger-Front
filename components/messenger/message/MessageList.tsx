@@ -35,6 +35,9 @@ export function MessageList({
 }: Readonly<MessageListProps>) {
     const virtuosoRef = useRef<VirtuosoHandle>(null);
     const userScrolledRef = useRef(false);
+    const [topVisibleDate, setTopVisibleDate] = useState<string | null>(null);
+    const [showDate, setShowDate] = useState(false);
+    const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [initialTopIndex] = useState(() => {
         if (anchorMessageId) {
             const idx = messages.findIndex((m) => m.id === anchorMessageId);
@@ -45,7 +48,17 @@ export function MessageList({
     });
 
     return (
-        <Virtuoso
+        <div className="relative h-full">
+            {showDate && topVisibleDate && (
+                <div className="absolute top-2 left-1/2 z-10 -translate-x-1/2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-foreground shadow-md transition-opacity">
+                    {new Date(topVisibleDate).toLocaleDateString('ko-KR', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                    })}
+                </div>
+            )}
+            <Virtuoso
             ref={virtuosoRef}
             data={messages}
             firstItemIndex={firstItemIndex}
@@ -63,6 +76,10 @@ export function MessageList({
             isScrolling={(isScrolling) => {
                 if (isScrolling) {
                     userScrolledRef.current = true;
+                    setShowDate(true);
+                    if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
+                } else {
+                    hideTimeoutRef.current = setTimeout(() => setShowDate(false), 3000);
                 }
             }}
             startReached={() => {
@@ -76,6 +93,10 @@ export function MessageList({
             }}
             endReached={() => {
                 if (hasNext && !isLoadingNext) onLoadNext();
+            }}
+            rangeChanged={({ startIndex }) => {
+                const msg = messages[startIndex - firstItemIndex];
+                if (msg) setTopVisibleDate(msg.createdAt);
             }}
             itemContent={(_, msg) => {
                 return (
@@ -102,6 +123,7 @@ export function MessageList({
                     </div>
                 ),
             }}
-        />
+            />
+        </div>
     );
 }
