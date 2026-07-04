@@ -154,6 +154,54 @@ export function useChannelMessages(
         [queryClient, queryKey],
     );
 
+    const updateMessage = useCallback(
+        (messageId: string, content: string) => {
+            queryClient.setQueryData<InfiniteData<ChannelMessagePage>>(
+                queryKey,
+                (oldData) => {
+                    if (!oldData) return oldData;
+
+                    return {
+                        ...oldData,
+                        pages: oldData.pages.map((page) => ({
+                            ...page,
+                            messages: page.messages.map((message) =>
+                                message.id === messageId
+                                    ? { ...message, content, isUpdated: true }
+                                    : message,
+                            ),
+                        })),
+                    };
+                },
+            );
+        },
+        [queryClient, queryKey],
+    );
+
+    const deleteMessage = useCallback(
+        (messageId: string) => {
+            queryClient.setQueryData<InfiniteData<ChannelMessagePage>>(
+                queryKey,
+                (oldData) => {
+                    if (!oldData) return oldData;
+
+                    return {
+                        ...oldData,
+                        pages: oldData.pages.map((page) => ({
+                            ...page,
+                            messages: page.messages.map((message) =>
+                                message.id === messageId
+                                    ? { ...message, isDeleted: true }
+                                    : message,
+                            ),
+                        })),
+                    };
+                },
+            );
+        },
+        [queryClient, queryKey],
+    );
+
     const syncFrom = useCallback(async() => {
         const cached = queryClient.getQueryData<InfiniteData<ChannelMessagePage>>(queryKey);
         let cursor = cached?.pages.at(-1)?.messages.at(-1)?.id ?? lastReadMessageId;
@@ -180,6 +228,8 @@ export function useChannelMessages(
         messages,
         firstItemIndex,
         addMessage,
+        updateMessage,
+        deleteMessage,
         lastReadMessageId,
         fetchPreviousPage,
         fetchNextPage,

@@ -4,6 +4,7 @@ import {
     MessageEvent,
     MessageRequest,
     MessageResponse,
+    MessageUpdatedData,
     TypingEvent,
     TypingRequest,
 } from '@/types/messenger';
@@ -13,19 +14,33 @@ import { useSocket } from '@/components/messenger/SocketProvider';
 export function useChannelSubscribe({
     channelId,
     receiveMessage,
+    updateMessage,
+    deleteMessage,
     receiveTyping,
 }: {
     channelId: string;
     receiveMessage: (message: MessageResponse) => void;
+    updateMessage: (messageId: string, content: string) => void;
+    deleteMessage: (messageId: string) => void;
     receiveTyping: (message: TypingEvent) => void;
 }) {
     const onMessageRef = useRef(receiveMessage);
+    const updateMessageRef = useRef(updateMessage);
+    const deleteMessageRef = useRef(deleteMessage);
     const onTypingRef = useRef(receiveTyping);
     const { publish, isConnected, hasEverConnected } = useSocket();
 
     useEffect(() => {
         onMessageRef.current = receiveMessage;
     }, [receiveMessage]);
+
+    useEffect(() => {
+        updateMessageRef.current = updateMessage;
+    }, [updateMessage]);
+
+    useEffect(() => {
+        deleteMessageRef.current = deleteMessage;
+    }, [deleteMessage]);
 
     useEffect(() => {
         onTypingRef.current = receiveTyping;
@@ -41,10 +56,13 @@ export function useChannelSubscribe({
                 );
                 break;
             case 'UPDATED':
-                // TODO: 메시지 업데이트
+                updateMessageRef.current(
+                    payload.messageId,
+                    (payload.data as MessageUpdatedData).content,
+                );
                 break;
             case 'DELETED':
-                // TODO: 메시지 삭제 처리
+                deleteMessageRef.current(payload.messageId);
                 break;
             default:
                 break;
@@ -66,6 +84,24 @@ export function useChannelSubscribe({
         [channelId, publish],
     );
 
+    const sendUpdateMessage = useCallback(
+        (messageId: string, content: string) =>
+            publish(
+                `/pub/channels/${channelId}/messages/${messageId}/update`,
+                JSON.stringify({ content }),
+            ),
+        [channelId, publish],
+    );
+
+    const sendDeleteMessage = useCallback(
+        (messageId: string) =>
+            publish(
+                `/pub/channels/${channelId}/messages/${messageId}/delete`,
+                '',
+            ),
+        [channelId, publish],
+    );
+
     const sendTyping = useCallback(
         (request: TypingRequest) =>
             publish(
@@ -77,5 +113,11 @@ export function useChannelSubscribe({
 
     const showDisconnectBanner = !isConnected && hasEverConnected;
 
-    return { sendMessage, sendTyping, showDisconnectBanner };
+    return {
+        sendMessage,
+        sendUpdateMessage,
+        sendDeleteMessage,
+        sendTyping,
+        showDisconnectBanner,
+    };
 }

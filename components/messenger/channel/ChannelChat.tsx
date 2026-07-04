@@ -31,6 +31,8 @@ export function ChannelChat({
         messages,
         firstItemIndex,
         addMessage,
+        updateMessage,
+        deleteMessage,
         lastReadMessageId,
         fetchPreviousPage,
         fetchNextPage,
@@ -39,9 +41,11 @@ export function ChannelChat({
         isFetchingPreviousPage,
         isFetchingNextPage,
     } = useChannelMessages(session, channelId, messageHistory);
-    const { sendMessage, sendTyping, showDisconnectBanner } = useChannelSubscribe({
+    const { sendMessage, sendUpdateMessage, sendDeleteMessage, sendTyping, showDisconnectBanner } = useChannelSubscribe({
         channelId,
         receiveMessage: addMessage,
+        updateMessage,
+        deleteMessage,
         receiveTyping: onTypingEvent,
     });
 
@@ -160,6 +164,8 @@ export function ChannelChat({
                     isLoadingPrevious={isFetchingPreviousPage}
                     isLoadingNext={isFetchingNextPage}
                     anchorMessageId={lastReadMessageId}
+                    updateMessage={sendUpdateMessage}
+                    deleteMessage={sendDeleteMessage}
                 />
             </CardContent>
 

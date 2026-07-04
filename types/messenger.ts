@@ -64,6 +64,10 @@ export interface MessageRequest {
     attachments?: AttachmentCreateRequest[];
 }
 
+export interface MessageUpdateRequest {
+    content: string;
+}
+
 export interface TypingRequest {
     isTyping: boolean;
 }
@@ -117,6 +121,8 @@ export interface MessageResponse {
     parentMessageId: string;
     attachments: AttachmentResponse[];
     createdAt: string;
+    isUpdated: boolean;
+    isDeleted: boolean;
 }
 
 export interface ChannelEnterResponse {

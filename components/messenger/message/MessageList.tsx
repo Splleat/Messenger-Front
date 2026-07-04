@@ -16,6 +16,8 @@ interface MessageListProps {
     isLoadingNext: boolean;
     anchorMessageId?: string;
     firstItemIndex: number;
+    updateMessage: (messageId: string, content: string) => void;
+    deleteMessage: (messageId: string) => void;
 }
 
 export function MessageList({
@@ -28,6 +30,8 @@ export function MessageList({
     isLoadingNext,
     anchorMessageId,
     firstItemIndex,
+    updateMessage,
+    deleteMessage,
 }: Readonly<MessageListProps>) {
     const virtuosoRef = useRef<VirtuosoHandle>(null);
     const userScrolledRef = useRef(false);
@@ -74,7 +78,13 @@ export function MessageList({
                 if (hasNext && !isLoadingNext) onLoadNext();
             }}
             itemContent={(_, msg) => {
-                return <MessageItem {...msg} />;
+                return (
+                    <MessageItem
+                        {...msg}
+                        onUpdateMessage={updateMessage}
+                        onDeleteMessage={deleteMessage}
+                    />
+                );
             }}
             components={{
                 Header: () => (
