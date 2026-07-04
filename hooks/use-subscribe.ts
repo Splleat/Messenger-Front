@@ -5,7 +5,7 @@ export function useSubscribe(
     destination: string,
     onMessage: (payload: unknown) => void,
 ) {
-    const { subscribe } = useSocket();
+    const { subscribe, isConnected } = useSocket();
     const onMessageRef = useRef(onMessage);
 
     useEffect(() => {
@@ -13,12 +13,12 @@ export function useSubscribe(
     }, [onMessage]);
 
     useEffect(() => {
-        if (!destination) return;
+        if (!destination || !isConnected) return;
 
         const unsubscribe = subscribe(destination, (message) => {
             onMessageRef.current(JSON.parse(message.body));
         });
 
         return () => unsubscribe?.();
-    }, [destination, subscribe]);
+    }, [destination, isConnected, subscribe]);
 }
