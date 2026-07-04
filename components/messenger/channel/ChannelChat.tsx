@@ -95,8 +95,10 @@ export function ChannelChat({
     }
 
     function handleDragEnter(e: React.DragEvent<HTMLDivElement>) {
-        e.preventDefault();
-        setIsDragging(true);
+        if (e.dataTransfer.types.includes('Files')) {
+            e.preventDefault();
+            setIsDragging(true);
+        }
     }
 
     function handleDragOver(e: React.DragEvent<HTMLDivElement>) {
