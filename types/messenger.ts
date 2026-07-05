@@ -110,6 +110,16 @@ export interface MessageTypingEvent {
     isTyping: boolean;
 }
 
+export interface NotificationEvent {
+    spaceId?: string;
+    channelId: string;
+    messageId: string;
+    senderName: string;
+    senderProfileUrl?: string;
+    content: string;
+    hasAttachment: boolean;
+}
+
 export interface MessageResponse {
     id: string;
     userId: string;
