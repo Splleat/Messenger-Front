@@ -99,6 +99,11 @@ export function ChannelChatInput({
     };
 
     function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+        // 한글 결합 중에 발생하는 Enter Keydown 이벤트 무시
+        if (e.nativeEvent.isComposing) {
+            return;
+        }
+
         // Enter가 눌렸고 Shift가 눌리지 않았다면 메시지 전송
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
