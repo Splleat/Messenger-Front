@@ -13,7 +13,12 @@ export function NotificationListener() {
 
     useNotification(session?.data?.user?.id ?? '', (event) => {
         const currentChannelId = searchParams.get('channelId');
-        if (currentChannelId === event.channelId) return;
+
+        // 브라우저 탭이 백그라운드이거나 창 포커스를 잃은 경우
+        const isTabHidden = typeof document !== 'undefined' && (document.hidden || !document.hasFocus());
+
+        // 채널에 접속 중이면서 브라우저가 활성화된 상태에서만 알림 생략
+        if (currentChannelId === event.channelId && !isTabHidden) return;
 
         const audio = new Audio('/notification.mp3');
 
