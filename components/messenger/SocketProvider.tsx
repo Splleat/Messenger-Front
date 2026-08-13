@@ -61,8 +61,13 @@ export function SocketProvider({
 
     const subscribe = useCallback(
         (destination: string, callback: (message: IMessage) => void) => {
-            const sub = clientRef.current?.subscribe(destination, callback);
-            return sub ? () => sub.unsubscribe() : null;
+            const client = clientRef.current;
+            if (!client?.connected) return null;
+
+            const sub = client.subscribe(destination, callback);
+            return () => {
+                if (client.connected) sub.unsubscribe();
+            };
         },
         [],
     );
